@@ -35,14 +35,23 @@ object ObfuscatePack {
 
         obfuscateModels(models, textures)
         obfuscateParentModels(packFiles)
+        obfuscateBlockStateFiles()
         obfuscateAtlas()
 
         copyAndCleanup()
     }
 
+    private fun obfuscateBlockStateFiles() {
+
+    }
+
     private fun copyAndCleanup() {
         val packDirNew = File("C:\\Users\\Sivert\\AppData\\Roaming\\.mineinabyss\\resourcepacks\\A")
         packDirNew.deleteRecursively()
+        // Delete empty subfolders
+        tempTextureDir.walkBottomUp().filter { it.isDirectory }.forEach { it.delete() }
+        tempModelDir.walkBottomUp().filter { it.isDirectory }.forEach { it.delete() }
+
         tempPackDir.copyRecursively(packDirNew, true)
         tempPackDir.parentFile.listFiles()?.filter { it.nameWithoutExtension.startsWith("tempPack") }?.forEach(File::deleteRecursively)
         packDirNew.resolve("assets/minecraft/font").deleteRecursively()
