@@ -1,11 +1,6 @@
 package com.boy0000.pack_obfuscator
 
-import com.boy0000.pack_obfuscator.ObfuscatePack.packPath
-import com.boy0000.pack_obfuscator.ObfuscatePack.texturePath
 import com.google.gson.JsonParser
-import com.mineinabyss.idofront.messaging.*
-import io.th0rgal.oraxen.OraxenPlugin
-import io.th0rgal.oraxen.utils.logs.Logs
 import org.bukkit.Material
 import java.io.File
 import java.io.FileOutputStream
@@ -16,7 +11,13 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
-data class ObfuscatedModel(val modelPath: String, val obfuscatedModelName: String)
+data class ObfuscatedModel(val modelPath: String, val obfuscatedModelName: String) {
+    val resourcePackModelPack: String get() {
+        val namespace = modelPath.substringAfter("assets/").substringBefore("/")
+        val path = modelPath.substringAfter("$namespace/models/").replace(".json", "")
+        return if (namespace == "minecraft") path else "$namespace:$path"
+    }
+}
 data class ObfuscatedTexture(val texturePath: String, val obfuscatedTextureName: String)
 
 object ObfuscatePack {
@@ -24,14 +25,13 @@ object ObfuscatePack {
     private val tempPackDir: File = Files.createTempDirectory("tempPack").toFile().apply { deleteOnExit() }
     private val tempTextureDir = tempPackDir.resolve("assets/minecraft/textures")
     private val tempModelDir = tempPackDir.resolve("assets/minecraft/models")
-    val obfuscatedMap = mutableMapOf<ObfuscatedModel, MutableSet<ObfuscatedTexture>>()
+    private val obfuscatedMap = mutableMapOf<ObfuscatedModel, MutableSet<ObfuscatedTexture>>()
     fun obfuscate(pack: File) {
         unzip(pack.absolutePath, tempPackDir.absolutePath)
 
         val packFiles = tempPackDir.listFilesRecursively()
         val models = packFiles.filter { it.isModel && !it.isVanillaBaseModel }
         val textures = packFiles.filter { it.isTexture }
-        //Logs.logInfo("Obfuscating ${textures.size} textures and ${models.size} models")
 
         obfuscateModels(models, textures)
         obfuscateParentModels(packFiles)
@@ -39,10 +39,6 @@ object ObfuscatePack {
         obfuscateAtlas()
 
         copyAndCleanup()
-    }
-
-    private fun obfuscateBlockStateFiles() {
-
     }
 
     private fun copyAndCleanup() {
@@ -56,6 +52,21 @@ object ObfuscatePack {
         tempPackDir.parentFile.listFiles()?.filter { it.nameWithoutExtension.startsWith("tempPack") }?.forEach(File::deleteRecursively)
         packDirNew.resolve("assets/minecraft/font").deleteRecursively()
         obfuscatedMap.clear()
+    }
+
+    private fun obfuscateBlockStateFiles() {
+        tempPackDir.resolve("assets/minecraft/blockstates").listFiles()?.forEach { blockstate ->
+            val blockstateJson = JsonParser.parseString(blockstate.readText()).asJsonObject
+            val variants = blockstateJson.getAsJsonObject("variants") ?: return@forEach
+            variants.entrySet().forEach variant@{ variant ->
+                val model = variant.value.asJsonObject.getAsJsonPrimitive("model").asString
+                val obfuscatedModel = obfuscatedMap.keys.find { it.resourcePackModelPack == model }?.obfuscatedModelName ?: return@variant
+                variant.value.asJsonObject.addProperty("model", obfuscatedModel)
+                variants.add(variant.key, variant.value)
+            }
+            blockstateJson.add("variants", variants)
+            blockstate.writeText(blockstateJson.toString())
+        }
     }
 
     private fun obfuscateAtlas() {
