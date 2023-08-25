@@ -2,12 +2,13 @@ package com.boy0000.pack_obfuscator
 
 import com.boy0000.pack_obfuscator.ObfuscatePack.substringBetween
 import com.google.gson.JsonParser
+import com.mineinabyss.idofront.messaging.broadcastVal
+import com.mineinabyss.idofront.messaging.logWarn
 import io.th0rgal.oraxen.OraxenPlugin
 import io.th0rgal.oraxen.api.OraxenPack
 import org.bukkit.Material
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.file.Files
 import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
@@ -24,14 +25,18 @@ data class ObfuscatedTexture(val texturePath: String, val obfuscatedTextureName:
 
 object ObfuscatePack {
 
-    public val tempPackDir: File = OraxenPlugin.get().dataFolder.resolve("obfuscatedPack")
+    val tempPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/obfuscatedPack")
+    val originalPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/originalPack.zip")
     private val tempTextureDir = tempPackDir.resolve("assets/minecraft/textures")
     private val tempModelDir = tempPackDir.resolve("assets/minecraft/models")
     private val obfuscatedMap = mutableMapOf<ObfuscatedModel, MutableSet<ObfuscatedTexture>>()
+
     fun obfuscate(pack: File) {
-        tempPackDir.deleteRecursively()
-        tempPackDir.mkdirs()
-        unzip(pack, tempPackDir)
+        if (!tempPackDir.exists()) tempPackDir.deleteRecursively()
+        if (!pack.exists()) logWarn("Could not find pack at ${pack.absolutePath}")
+        val resourcePack = if (originalPackDir.exists()) originalPackDir else pack
+        if (!originalPackDir.exists()) pack.copyTo(originalPackDir).broadcastVal()
+        unzip(resourcePack, tempPackDir)
 
         val packFiles = tempPackDir.listFilesRecursively()
         obfuscateModels(packFiles)
@@ -45,7 +50,9 @@ object ObfuscatePack {
     private fun copyAndCleanup() {
         // Delete empty subfolders
         obfuscatedMap.clear()
-        zip(tempPackDir, OraxenPack.getPack())
+        OraxenPack.getPack().deleteRecursively()
+        zipDirectory(tempPackDir, OraxenPack.getPack())
+        tempPackDir.deleteRecursively()
     }
 
     private fun obfuscateBlockStateFiles() {
@@ -177,19 +184,38 @@ object ObfuscatePack {
         }
     }
 
-    private fun zip(sourceDirectory: File, zipFile: File) {
-        val outputStream = ZipOutputStream(FileOutputStream(zipFile))
-
-        sourceDirectory.walkTopDown().forEach { file ->
-            val entryName = sourceDirectory.toPath().relativize(file.toPath()).toString()
-            val entry = ZipEntry(entryName)
-            outputStream.putNextEntry(entry)
-
-            if (file.isFile) Files.copy(file.toPath(), outputStream)
-
-            outputStream.closeEntry()
+    fun zipDirectory(directoryToZip: File, zipFile: File) {
+        runCatching {
+            val fos = FileOutputStream(zipFile)
+            val zos = ZipOutputStream(fos)
+            zip(directoryToZip, directoryToZip, zos)
+            zos.close()
+            fos.close()
+        }.onFailure {
+            it.printStackTrace()
         }
-        outputStream.close()
+    }
+
+    private fun zip(directory: File, base: File, zos: ZipOutputStream) {
+        val files = directory.listFiles() ?: return logWarn("Could not find any files in $directory")
+        val buffer = ByteArray(1024)
+
+        for (file in files) {
+            if (file.isDirectory) zip(file, base, zos)
+            else {
+                val entry = ZipEntry(file.relativeTo(base).path)
+                zos.putNextEntry(entry)
+                val fis = file.inputStream()
+
+                var length: Int
+                while (fis.read(buffer).also { length = it } > 0) {
+                    zos.write(buffer, 0, length)
+                }
+
+                fis.close()
+                zos.closeEntry()
+            }
+        }
     }
 
 }
