@@ -1,11 +1,13 @@
 package com.boy0000.pack_obfuscator
 
+import com.boy0000.pack_obfuscator.ObfuscatePack.substringBetween
 import com.google.gson.JsonParser
+import io.th0rgal.oraxen.OraxenPlugin
+import io.th0rgal.oraxen.api.OraxenPack
 import org.bukkit.Material
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
@@ -13,7 +15,7 @@ import java.util.zip.ZipOutputStream
 
 data class ObfuscatedModel(val modelPath: String, val obfuscatedModelName: String) {
     val resourcePackModelPack: String get() {
-        val namespace = modelPath.substringAfter("assets/").substringBefore("/")
+        val namespace = modelPath.substringBetween("assets/", "/models")
         val path = modelPath.substringAfter("$namespace/models/").replace(".json", "")
         return if (namespace == "minecraft") path else "$namespace:$path"
     }
@@ -22,19 +24,18 @@ data class ObfuscatedTexture(val texturePath: String, val obfuscatedTextureName:
 
 object ObfuscatePack {
 
-    private val tempPackDir: File = Files.createTempDirectory("tempPack").toFile().apply { deleteOnExit() }
+    public val tempPackDir: File = OraxenPlugin.get().dataFolder.resolve("obfuscatedPack")
     private val tempTextureDir = tempPackDir.resolve("assets/minecraft/textures")
     private val tempModelDir = tempPackDir.resolve("assets/minecraft/models")
     private val obfuscatedMap = mutableMapOf<ObfuscatedModel, MutableSet<ObfuscatedTexture>>()
     fun obfuscate(pack: File) {
-        unzip(pack.absolutePath, tempPackDir.absolutePath)
+        tempPackDir.deleteRecursively()
+        tempPackDir.mkdirs()
+        unzip(pack, tempPackDir)
 
         val packFiles = tempPackDir.listFilesRecursively()
-        val models = packFiles.filter { it.isModel && !it.isVanillaBaseModel }
-        val textures = packFiles.filter { it.isTexture }
-
-        obfuscateModels(models, textures)
-        obfuscateParentModels(packFiles)
+        obfuscateModels(packFiles)
+        obfuscateParentModels(packFiles.filter { it.isTexture })
         obfuscateBlockStateFiles()
         obfuscateAtlas()
 
@@ -42,16 +43,9 @@ object ObfuscatePack {
     }
 
     private fun copyAndCleanup() {
-        val packDirNew = File("C:\\Users\\Sivert\\AppData\\Roaming\\.mineinabyss\\resourcepacks\\A")
-        packDirNew.deleteRecursively()
         // Delete empty subfolders
-        tempTextureDir.walkBottomUp().filter { it.isDirectory }.forEach { it.delete() }
-        tempModelDir.walkBottomUp().filter { it.isDirectory }.forEach { it.delete() }
-
-        tempPackDir.copyRecursively(packDirNew, true)
-        tempPackDir.parentFile.listFiles()?.filter { it.nameWithoutExtension.startsWith("tempPack") }?.forEach(File::deleteRecursively)
-        packDirNew.resolve("assets/minecraft/font").deleteRecursively()
         obfuscatedMap.clear()
+        zip(tempPackDir, OraxenPack.getPack())
     }
 
     private fun obfuscateBlockStateFiles() {
@@ -105,7 +99,9 @@ object ObfuscatePack {
         }
     }
 
-    private fun obfuscateModels(models: List<File>, textureFiles: List<File>) {
+    private fun obfuscateModels(packFiles: List<File>) {
+        val models = packFiles.filter { it.isModel && !it.isVanillaBaseModel }
+        val textures = packFiles.filter { it.isTexture }
         models.forEach models@{ model ->
             if (!model.exists()) return@models
             val modelJson = JsonParser.parseString(model.readText()).asJsonObject
@@ -114,7 +110,7 @@ object ObfuscatePack {
 
             modelTextures.forEach textures@{ texture ->
                 val obfuscatedTextureName = obfuscatedMap.values.flatten().find { it.texturePath.substringBetween("textures/", ".png") == texture }?.obfuscatedTextureName?: UUID.randomUUID().toString().replace("-", "")
-                val textureFile = textureFiles.find { texture in it.texturePath } ?: return@textures
+                val textureFile = textures.find { texture in it.texturePath } ?: return@textures
                 textureFile.renameTo(File(tempTextureDir, "$obfuscatedTextureName.png"))
                 File(textureFile.path.replace(".png", ".png.mcmeta")).let {
                     if (it.exists()) it.renameTo(File(tempTextureDir, "$obfuscatedTextureName.png.mcmeta"))
@@ -146,25 +142,22 @@ object ObfuscatePack {
         return isBase && Material.matchMaterial(this.nameWithoutExtension) != null
     }
 
-    private fun String.substringBetween(start: String, end: String) = this.substringAfter(start).substringBefore(end)
+    internal fun String.substringBetween(start: String, end: String) = this.substringAfter(start).substringBefore(end)
 
     private fun File.listFilesRecursively() = mutableListOf<File>().apply {
         walkTopDown().forEach { this += it }
     }
 
-    fun unzip(zipFilePath: String, destinationFolderPath: String) {
-        val zipFile = ZipFile(zipFilePath)
-        val destinationFolder = File(destinationFolderPath)
+    private fun unzip(zippedPack: File, destinationDirectory: File) {
+        val zipFile = ZipFile(zippedPack)
 
-        if (!destinationFolder.exists()) {
-            destinationFolder.mkdirs()
-        }
+        if (!destinationDirectory.exists()) destinationDirectory.mkdirs()
 
         val entries = zipFile.entries()
 
         while (entries.hasMoreElements()) {
             val entry = entries.nextElement()
-            val entryDestination = File(destinationFolderPath, entry.name)
+            val entryDestination = File(destinationDirectory, entry.name)
 
             if (entry.isDirectory) {
                 entryDestination.mkdirs()
@@ -172,27 +165,30 @@ object ObfuscatePack {
                 entryDestination.parentFile.mkdirs()
 
                 zipFile.getInputStream(entry).use { input ->
-                    Files.copy(input, entryDestination.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                    FileOutputStream(entryDestination).use { output ->
+                        val buffer = ByteArray(1024)
+                        var bytesRead: Int
+                        while (input.read(buffer).also { bytesRead = it } != -1) {
+                            output.write(buffer, 0, bytesRead)
+                        }
+                    }
                 }
             }
         }
     }
 
-    fun zip(sourceDirectory: File, zipFilePath: String) {
-        val outputStream = ZipOutputStream(FileOutputStream(zipFilePath))
+    private fun zip(sourceDirectory: File, zipFile: File) {
+        val outputStream = ZipOutputStream(FileOutputStream(zipFile))
 
         sourceDirectory.walkTopDown().forEach { file ->
             val entryName = sourceDirectory.toPath().relativize(file.toPath()).toString()
             val entry = ZipEntry(entryName)
             outputStream.putNextEntry(entry)
 
-            if (file.isFile) {
-                Files.copy(file.toPath(), outputStream)
-            }
+            if (file.isFile) Files.copy(file.toPath(), outputStream)
 
             outputStream.closeEntry()
         }
-
         outputStream.close()
     }
 
