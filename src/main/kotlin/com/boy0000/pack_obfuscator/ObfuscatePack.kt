@@ -1,11 +1,11 @@
 package com.boy0000.pack_obfuscator
 
 import com.boy0000.pack_obfuscator.ObfuscatePack.substringBetween
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.mineinabyss.idofront.messaging.broadcastVal
 import com.mineinabyss.idofront.messaging.logWarn
 import io.th0rgal.oraxen.OraxenPlugin
-import io.th0rgal.oraxen.api.OraxenPack
 import org.bukkit.Material
 import java.io.File
 import java.io.FileOutputStream
@@ -29,29 +29,54 @@ object ObfuscatePack {
     val originalPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/originalPack.zip")
     private val tempTextureDir = tempPackDir.resolve("assets/minecraft/textures")
     private val tempModelDir = tempPackDir.resolve("assets/minecraft/models")
+    private val tempFontDir = tempPackDir.resolve("assets/minecraft/font")
     private val obfuscatedMap = mutableMapOf<ObfuscatedModel, MutableSet<ObfuscatedTexture>>()
+    private val obfuscatedFont = mutableMapOf<String, String>()
 
     fun obfuscate(pack: File) {
         if (!tempPackDir.exists()) tempPackDir.deleteRecursively()
         if (!pack.exists()) logWarn("Could not find pack at ${pack.absolutePath}")
         val resourcePack = if (originalPackDir.exists()) originalPackDir else pack
-        if (!originalPackDir.exists()) pack.copyTo(originalPackDir).broadcastVal()
+        if (!originalPackDir.exists()) pack.copyTo(originalPackDir)
         unzip(resourcePack, tempPackDir)
 
         val packFiles = tempPackDir.listFilesRecursively()
         obfuscateModels(packFiles)
         obfuscateParentModels(packFiles.filter { it.isTexture })
         obfuscateBlockStateFiles()
+        obfuscateFonts(packFiles)
         obfuscateAtlas()
 
         copyAndCleanup()
     }
 
+    private fun obfuscateFonts(packFiles: List<File>) {
+        val defaultFont = packFiles.find { it.packPath == "assets/minecraft/font/default.json" } ?: return
+        val defaultJson = JsonParser.parseString(defaultFont.readText()).asJsonObject
+        val providers = defaultJson.getAsJsonArray("providers") ?: return
+
+        providers.map { it.asJsonObject }.forEach {
+            val texture = it.get("file").asString ?: return
+            if (texture.startsWith("required/")) return@forEach
+
+            val obfuscatedTextureName = obfuscatedFont.computeIfAbsent(texture) { UUID.randomUUID().toString().replace("-", "") }
+            it.addProperty("file", obfuscatedTextureName)
+            providers.add(it)
+
+            // If file doesn't exist don't attempt to rename
+            // It has either already been renamed or doesn't exist
+            val textureFile = packFiles.find { t -> t.isTexture && t.texturePath == texture } ?: return@forEach
+            textureFile.renameTo(File(tempFontDir, textureFile.name))
+        }
+        defaultJson.add("providers", providers)
+        defaultFont.writeText(defaultJson.toString())
+    }
+
     private fun copyAndCleanup() {
         // Delete empty subfolders
         obfuscatedMap.clear()
-        OraxenPack.getPack().deleteRecursively()
-        zipDirectory(tempPackDir, OraxenPack.getPack())
+        OraxenPlugin.get().resourcePack.file.deleteRecursively()
+        zipDirectory(tempPackDir, OraxenPlugin.get().resourcePack.file)
         tempPackDir.deleteRecursively()
     }
 
@@ -71,20 +96,20 @@ object ObfuscatePack {
     }
 
     private fun obfuscateAtlas() {
-        val atlas = File(tempPackDir, "assets/minecraft/atlases/blocks.json")
-        val atlasJson = JsonParser.parseString(atlas.readText()).asJsonObject
-        val sources = atlasJson.getAsJsonArray("sources") ?: return
         val obfuscatedTextures = obfuscatedMap.values.flatten().map { ObfuscatedTexture(it.texturePath.substringBetween("textures/", ".png"), it.obfuscatedTextureName) }
-        sources.map { it.asJsonObject }.forEach {
-            if (it.get("type").asString != "single") return@forEach
-            val resource = it.get("resource").asString.replace("minecraft:", "")
-            val texture = obfuscatedTextures.find { it.texturePath == resource } ?: return@forEach
-            if (resource == texture.texturePath) it.addProperty("resource", texture.obfuscatedTextureName)
-            if (it.get("sprite").asString.replace("minecraft:", "") == texture.texturePath) it.addProperty("sprite", texture.obfuscatedTextureName)
-            sources.add(it)
+        val newAtlasJson = JsonObject().apply {
+            add("sources", JsonArray().apply {
+                obfuscatedTextures.forEach {
+                    add(JsonObject().apply {
+                        addProperty("type", "single")
+                        addProperty("resource", it.obfuscatedTextureName)
+                        addProperty("sprite", it.obfuscatedTextureName)
+                    })
+                }
+            })
         }
-        atlasJson.add("sources", sources)
-        atlas.writeText(atlasJson.toString())
+
+        File(tempPackDir, "assets/minecraft/atlases/blocks.json").writeText(newAtlasJson.toString())
     }
 
     private fun obfuscateParentModels(packFiles: List<File>) {
@@ -131,7 +156,7 @@ object ObfuscatePack {
         }
     }
 
-    private val File.packPath get() = this.path.removePrefix(tempPackDir.absolutePath).drop(1).replace("\\", "/").replace(".png", "")
+    private val File.packPath get() = this.absolutePath.removePrefix(tempPackDir.absolutePath).drop(1).replace("\\", "/").replace(".png", "")
     private val File.modelPath get(): String {
         val namespace = this.packPath.substringAfter("assets/").substringBefore("/")
         val path = this.packPath.substringAfter("$namespace/models/")
