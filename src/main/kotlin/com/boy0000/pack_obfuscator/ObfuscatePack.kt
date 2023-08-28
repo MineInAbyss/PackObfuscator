@@ -34,7 +34,7 @@ object ObfuscatePack {
     private val obfuscatedFont = mutableMapOf<String, String>()
 
     fun obfuscate(pack: File) {
-        if (!tempPackDir.exists()) tempPackDir.deleteRecursively()
+        if (tempPackDir.exists()) tempPackDir.deleteRecursively()
         if (!pack.exists()) logWarn("Could not find pack at ${pack.absolutePath}")
         val resourcePack = if (originalPackDir.exists()) originalPackDir else pack
         if (!originalPackDir.exists()) pack.copyTo(originalPackDir)

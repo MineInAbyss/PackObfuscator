@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
@@ -24,7 +22,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("io.th0rgal:oraxen:1.160.0")
+    compileOnly("io.th0rgal:oraxen:1.161.0")
 
     //paperDevBundle("1.19.3-R0.1-SNAPSHOT") //NMS
     implementation(kotlin("stdlib-jdk8"))
