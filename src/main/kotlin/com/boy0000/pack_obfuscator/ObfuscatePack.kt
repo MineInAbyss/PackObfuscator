@@ -6,7 +6,11 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.mineinabyss.idofront.messaging.logWarn
 import io.th0rgal.oraxen.OraxenPlugin
+import io.th0rgal.oraxen.api.events.OraxenPackGeneratedEvent
+import io.th0rgal.oraxen.pack.upload.UploadManager
 import org.bukkit.Material
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -23,7 +27,12 @@ data class ObfuscatedModel(val modelPath: String, val obfuscatedModelName: Strin
 }
 data class ObfuscatedTexture(val texturePath: String, val obfuscatedTextureName: String)
 
-object ObfuscatePack {
+object ObfuscatePack : Listener {
+
+    @EventHandler
+    fun OraxenPackGeneratedEvent.on() {
+        //CreativeObfuscator.obfuscate()
+    }
 
     val tempPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/obfuscatedPack")
     val originalPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/originalPack.zip")
@@ -48,6 +57,12 @@ object ObfuscatePack {
         obfuscateAtlas()
 
         copyAndCleanup()
+        reuploadObfuscatedPack()
+    }
+
+    private fun reuploadObfuscatedPack() {
+        OraxenPlugin.get().uploadManager = UploadManager(OraxenPlugin.get())
+        OraxenPlugin.get().uploadManager.uploadAsyncAndSendToPlayers(OraxenPlugin.get().resourcePack)
     }
 
     private fun obfuscateFonts(packFiles: List<File>) {
@@ -180,7 +195,7 @@ object ObfuscatePack {
         walkTopDown().forEach { this += it }
     }
 
-    private fun unzip(zippedPack: File, destinationDirectory: File) {
+    internal fun unzip(zippedPack: File, destinationDirectory: File) {
         val zipFile = ZipFile(zippedPack)
 
         if (!destinationDirectory.exists()) destinationDirectory.mkdirs()

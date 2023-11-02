@@ -1,10 +1,11 @@
+import net.minecrell.pluginyml.paper.PaperPluginDescription
+
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
+    id("org.jetbrains.kotlin.jvm") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
-    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
-    //id("io.papermc.paperweight.userdev") version "1.4.0" // NMS
+    id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
     alias(libs.plugins.mia.copyjar)
 }
 
@@ -16,20 +17,23 @@ repositories {
 
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.mineinabyss.com/releases")
-    maven("https://jitpack.io")
+    maven("https://repo.oraxen.com/releases")
+    maven("https://repo.unnamed.team/repository/unnamed-public/")
     mavenLocal()
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("io.th0rgal:oraxen:1.161.0")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
+    compileOnly("io.th0rgal:oraxen:1.163.0")
 
-    //paperDevBundle("1.19.3-R0.1-SNAPSHOT") //NMS
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.idofront.commands)
     implementation(libs.idofront.util)
     implementation(libs.idofront.text.components)
     implementation(libs.idofront.logging)
+    implementation("team.unnamed:creative-api:1.2.2-SNAPSHOT")
+    implementation("team.unnamed:creative-server:1.2.2-SNAPSHOT")
+    implementation("team.unnamed:creative-serializer-minecraft:1.2.2-SNAPSHOT")
 }
 
 copyJar {
@@ -89,12 +93,18 @@ java {
 }
 
 
-bukkit {
+paper {
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
     main = "com.boy0000.pack_obfuscator.OraxenPackObfuscator"
     version = "${project.version}"
     apiVersion = "1.20"
     authors = listOf("boy0000")
-    depend = listOf("Oraxen")
-    commands.create("oraxen_obf")
+    foliaSupported = true
+
+    serverDependencies {
+        register("Oraxen") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            required = true
+        }
+    }
 }
