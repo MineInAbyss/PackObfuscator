@@ -8,7 +8,7 @@ val obfuscator: OraxenPackObfuscator by lazy { Bukkit.getPluginManager().getPlug
 class OraxenPackObfuscator : JavaPlugin() {
     override fun onEnable() {
         ObfuscateCommands()
-        listeners(ObfuscatePack)
+        listeners(OraxenListener())
     }
 
     override fun onDisable() {

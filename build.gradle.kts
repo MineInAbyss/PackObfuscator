@@ -24,16 +24,16 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("io.th0rgal:oraxen:1.163.0")
+    compileOnly("io.th0rgal:oraxen:1.169.0")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.idofront.commands)
     implementation(libs.idofront.util)
     implementation(libs.idofront.text.components)
     implementation(libs.idofront.logging)
-    implementation("team.unnamed:creative-api:1.2.2-SNAPSHOT")
-    implementation("team.unnamed:creative-server:1.2.2-SNAPSHOT")
-    implementation("team.unnamed:creative-serializer-minecraft:1.2.2-SNAPSHOT")
+    implementation("team.unnamed:creative-api:1.3.0")
+    implementation("team.unnamed:creative-server:1.3.0")
+    implementation("team.unnamed:creative-serializer-minecraft:1.3.0")
 }
 
 copyJar {

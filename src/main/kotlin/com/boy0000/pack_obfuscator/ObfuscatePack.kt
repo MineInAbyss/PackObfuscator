@@ -27,12 +27,7 @@ data class ObfuscatedModel(val modelPath: String, val obfuscatedModelName: Strin
 }
 data class ObfuscatedTexture(val texturePath: String, val obfuscatedTextureName: String)
 
-object ObfuscatePack : Listener {
-
-    @EventHandler
-    fun OraxenPackGeneratedEvent.on() {
-        //CreativeObfuscator.obfuscate()
-    }
+object ObfuscatePack {
 
     val tempPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/obfuscatedPack")
     val originalPackDir: File = OraxenPlugin.get().dataFolder.resolve("pack/originalPack.zip")
@@ -61,8 +56,7 @@ object ObfuscatePack : Listener {
     }
 
     private fun reuploadObfuscatedPack() {
-        OraxenPlugin.get().uploadManager = UploadManager(OraxenPlugin.get())
-        OraxenPlugin.get().uploadManager.uploadAsyncAndSendToPlayers(OraxenPlugin.get().resourcePack)
+        OraxenPlugin.get().uploadManager.uploadAsyncAndSendToPlayers(OraxenPlugin.get().resourcePack, true, false)
     }
 
     private fun obfuscateFonts(packFiles: List<File>) {
