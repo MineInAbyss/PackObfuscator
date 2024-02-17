@@ -13,7 +13,6 @@ class ObfuscateCommands : IdofrontCommandExecutor() {
                     Logs.logInfo("Attempting to Obfuscate OraxenPack...")
                     ObfuscatePack.obfuscate(OraxenPack.getPack())
                     Logs.logSuccess("Successfully Obfuscated OraxenPack!")
-                    OraxenPack.uploadPack()
                 }
             }
             "creative" {

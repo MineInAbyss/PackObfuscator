@@ -68,6 +68,7 @@ tasks {
 
     shadowJar {
         archiveFileName.set("OraxenPackObfuscator.jar")
+        relocate("kotlin", "com.boy0000.shaded.kotlin")
         val pluginLoc = project.property("oraxen_plugin_path") as String + "\\OraxenPackObfuscator.jar"
         //archiveFile.get().asFile.copyTo(layout.projectDirectory.file("run/plugins/ModernLightApi.jar").asFile, true)
         println("Copied to $pluginLoc")

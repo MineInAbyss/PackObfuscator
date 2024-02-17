@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin
 val obfuscator: OraxenPackObfuscator by lazy { Bukkit.getPluginManager().getPlugin("OraxenPackObfuscator") as OraxenPackObfuscator }
 class OraxenPackObfuscator : JavaPlugin() {
     override fun onEnable() {
-        ObfuscateCommands()
+        //ObfuscateCommands()
         listeners(OraxenListener())
     }
 
