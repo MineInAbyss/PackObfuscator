@@ -8,13 +8,6 @@ class ObfuscateCommands : IdofrontCommandExecutor() {
 
     override val commands = commands(obfuscator) {
         ("oraxen_obf") {
-            "main" {
-                action {
-                    Logs.logInfo("Attempting to Obfuscate OraxenPack...")
-                    ObfuscatePack.obfuscate(OraxenPack.getPack())
-                    Logs.logSuccess("Successfully Obfuscated OraxenPack!")
-                }
-            }
             "creative" {
                 action {
                     Logs.logInfo("Attempting to Obfuscate OraxenPack via Creative...")

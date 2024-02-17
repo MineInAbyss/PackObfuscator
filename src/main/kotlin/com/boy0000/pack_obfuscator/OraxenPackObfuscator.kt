@@ -10,12 +10,4 @@ class OraxenPackObfuscator : JavaPlugin() {
         //ObfuscateCommands()
         listeners(OraxenListener())
     }
-
-    override fun onDisable() {
-        // Plugin shutdown logic
-        runCatching {
-            ObfuscatePack.tempPackDir.deleteRecursively()
-            ObfuscatePack.originalPackDir.deleteRecursively()
-        }
-    }
 }
