@@ -1,0 +1,64 @@
+# Lines that start with # are comments, and PackSquash ignores them.
+# You can also start a comment in the middle of a line with #, that
+# spans until the end of the line
+
+# Global options
+pack_directory = '<server>\\plugins\\OraxenPackObfuscator\\oraxenPack'
+output_file_path = '<server>\\plugins\\Oraxen\\pack.zip'
+recompress_compressed_files = true
+zip_compression_iterations = 5
+automatic_minecraft_quirks_detection = true
+# The value of this option is ignored due to automatic quirk detection
+# being enabled, but this usually does not matter
+work_around_minecraft_quirks = ['grayscale_images_gamma_miscorrection', 'java8_zip_parsing']
+allow_mods = ['OptiFine']
+skip_pack_icon = false
+validate_pack_metadata_file = true
+ignore_system_and_hidden_files = false
+zip_spec_conformance_level = 'disregard'
+# These two are actually ignored due to the ZIP spec conformance level
+size_increasing_zip_obfuscation = true
+percentage_of_zip_structures_tuned_for_obfuscation_discretion = 100
+never_store_squash_times = true
+# System dependent values. Use them as-is only if you have a good reason,
+# not just because you have copied and pasted this options file
+threads = 4
+spooling_buffers_size = 128 # MiB
+
+# Per-file options below
+
+# Ogg files do not get transcoded
+['**/*?.ogg']
+transcode_ogg = false
+
+# Lossless music files get pitch shifted and compressed with good quality
+['**/*?.{flac,wav}']
+channels = 2
+sampling_frequency = 44100
+target_pitch = 1.5
+target_bitrate_control_metric = 96000
+
+# JSON files with comments get prettified and nothing is removed from them
+['**/*.jsonc']
+minify_json = false
+delete_bloat_keys = false
+
+# Compress textures losslessly no matter what. Keep them small
+['**/*.png']
+image_data_compression_iterations = 15
+color_quantization_target = 'none'
+maximum_width_and_height = 2048
+skip_alpha_optimizations = true
+
+# Don't minify shaders
+['**/*.{fsh,vsh}']
+shader_source_transformation_strategy = 'keep_as_is'
+
+# Don't minify properties files
+['**/*.properties']
+minify_properties = false
+
+['**/textures/models/armor/*?.png']
+image_data_compression_iterations = 0
+skip_alpha_optimizations = true
+color_quantization_target = 'none'

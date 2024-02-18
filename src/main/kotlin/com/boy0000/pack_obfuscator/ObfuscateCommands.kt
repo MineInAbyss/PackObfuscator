@@ -6,8 +6,14 @@ import io.th0rgal.oraxen.utils.logs.Logs
 
 class ObfuscateCommands : IdofrontCommandExecutor() {
 
-    override val commands = commands(obfuscator) {
+    override val commands = commands(obfuscator.plugin) {
         ("oraxen_obf") {
+            "reload" {
+                action {
+                    obfuscator.plugin.createContext()
+                    Logs.logSuccess("Successfully Reloaded OraxenPackObfuscator!")
+                }
+            }
             "creative" {
                 action {
                     Logs.logInfo("Attempting to Obfuscate OraxenPack via Creative...")

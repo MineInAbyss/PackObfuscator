@@ -7,6 +7,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
     alias(libs.plugins.mia.copyjar)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 group = "com.boy0000"
@@ -24,13 +25,18 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("io.th0rgal:oraxen:1.169.0")
+    compileOnly("io.th0rgal:oraxen:1.170.0")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.idofront.commands)
+    implementation(libs.idofront.config)
+    implementation(libs.idofront.di)
     implementation(libs.idofront.util)
     implementation(libs.idofront.text.components)
     implementation(libs.idofront.logging)
+    implementation(libs.kotlinx.serialization.kaml)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines)
     implementation("team.unnamed:creative-api:1.3.0")
     implementation("team.unnamed:creative-server:1.3.0")
     implementation("team.unnamed:creative-serializer-minecraft:1.3.0")
@@ -69,6 +75,7 @@ tasks {
     shadowJar {
         archiveFileName.set("OraxenPackObfuscator.jar")
         relocate("kotlin", "com.boy0000.shaded.kotlin")
+        relocate("kotlinx", "com.boy0000.shaded.kotlinx")
         val pluginLoc = project.property("oraxen_plugin_path") as String + "\\OraxenPackObfuscator.jar"
         //archiveFile.get().asFile.copyTo(layout.projectDirectory.file("run/plugins/ModernLightApi.jar").asFile, true)
         println("Copied to $pluginLoc")
