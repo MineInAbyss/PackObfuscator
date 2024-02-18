@@ -92,10 +92,19 @@ object ObfuscatePack {
             val blockstateJson = virtualFile.toJsonElement()?.asJsonObject ?: return@forEach
             val variants = blockstateJson.getAsJsonObject("variants") ?: return@forEach
             variants.entrySet().forEach variant@{ variant ->
-                val model = variant.value.asJsonObject.getAsJsonPrimitive("model").asString.replace("minecraft:", "")
-                val obfuscatedModel = obfuscatedMap.keys.find { it.packPath == model }?.obfPackPath ?: return@variant
-                variant.value.asJsonObject.addProperty("model", obfuscatedModel)
-                variants.add(variant.key, variant.value)
+                if (variant.value.isJsonObject) {
+                    val model = variant.value.asJsonObject.getAsJsonPrimitive("model").asString.replace("minecraft:", "")
+                    val obfuscatedModel = obfuscatedMap.keys.find { it.packPath == model }?.obfPackPath ?: return@variant
+                    variant.value.asJsonObject.addProperty("model", obfuscatedModel)
+                    variants.add(variant.key, variant.value)
+                } else if (variant.value.isJsonArray) {
+                    variant.value.asJsonArray.forEach { element ->
+                        val model = element.asJsonObject.getAsJsonPrimitive("model").asString.replace("minecraft:", "")
+                        val obfuscatedModel = obfuscatedMap.keys.find { it.packPath == model }?.obfPackPath ?: return@variant
+                        element.asJsonObject.addProperty("model", obfuscatedModel)
+                    }
+                    variants.add(variant.key, variant.value)
+                }
             }
             blockstateJson.add("variants", variants)
             virtualFile.inputStream = blockstateJson.toString().byteInputStream()
