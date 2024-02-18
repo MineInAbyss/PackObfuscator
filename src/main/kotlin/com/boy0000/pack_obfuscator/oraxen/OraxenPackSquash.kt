@@ -5,13 +5,17 @@ import com.boy0000.pack_obfuscator.obfuscator
 import com.boy0000.pack_obfuscator.unzip
 import io.th0rgal.oraxen.api.OraxenPack
 import io.th0rgal.oraxen.utils.logs.Logs
+import java.io.File
 
 object OraxenPackSquash: PackSquash {
+
+    val inputPackDir = obfuscator.plugin.dataFolder.resolve("oraxen/pack/")
+    val outputZip = obfuscator.plugin.dataFolder.resolve("oraxen/pack.zip")
     override fun extractExecutable() {
         super.extractExecutable()
-        val toml = obfuscator.plugin.dataFolder.resolve("packsquash.toml")
-        val packDir = obfuscator.plugin.dataFolder.resolve("oraxen/pack").absolutePath.replace("\\", "/")
-        val outputPack = obfuscator.plugin.dataFolder.resolve("oraxen/pack.zip").absolutePath.replace("\\", "/")
+        val toml = File(obfuscator.config.packSquash.settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(obfuscator.config.packSquash.settingsPath)
+        val packDir = inputPackDir.absolutePath.replace("\\", "/")
+        val outputPack = outputZip.absolutePath.replace("\\", "/")
         val tomlContent = toml.readText()
             .replace("pack_directory = .*".toRegex(), "pack_directory = \'${packDir}\'")
             .replace("output_file_path = .*".toRegex(), "output_file_path = \'${outputPack}\'")
@@ -19,14 +23,12 @@ object OraxenPackSquash: PackSquash {
     }
 
     fun squashOraxenPack() {
-        val destination = obfuscator.plugin.dataFolder.resolve("oraxenPack/")
-        val cache = obfuscator.plugin.dataFolder.resolve("oraxenPack.zip")
-        unzip(OraxenPack.getPack(), destination)
+        unzip(OraxenPack.getPack(), inputPackDir)
 
-        squashPack()
+        super.squashPack()
 
-        destination.deleteRecursively()
-        cache.copyTo(OraxenPack.getPack(), true)
+        inputPackDir.deleteRecursively()
+        outputZip.copyTo(OraxenPack.getPack(), true)
     }
 
     override fun logSquashError(line: String) {

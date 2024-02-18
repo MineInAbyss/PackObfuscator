@@ -3,7 +3,6 @@ package com.boy0000.pack_obfuscator
 import com.mineinabyss.idofront.messaging.logError
 import com.mineinabyss.idofront.messaging.logInfo
 import com.mineinabyss.idofront.messaging.logWarn
-import io.th0rgal.oraxen.utils.logs.Logs
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.ProcessBuilder.Redirect
@@ -23,7 +22,7 @@ interface PackSquash {
     }
     fun squashPack() {
         val packSquashExecutablePath = obfuscator.config.packSquash.executablePath
-        val partialPackSquashSettingsPath = obfuscator.config.packSquash.partialPackSquashSettingsPath
+        val partialPackSquashSettingsPath = obfuscator.config.packSquash.settingsPath
 
         runCatching {
             val processBuilder = ProcessBuilder(packSquashExecutablePath, partialPackSquashSettingsPath)

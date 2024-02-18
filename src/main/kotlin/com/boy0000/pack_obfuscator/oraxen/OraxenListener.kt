@@ -1,6 +1,5 @@
 package com.boy0000.pack_obfuscator.oraxen
 
-import com.boy0000.pack_obfuscator.PackObfuscator
 import com.boy0000.pack_obfuscator.obfuscator
 import io.th0rgal.oraxen.api.events.OraxenPackGeneratedEvent
 import io.th0rgal.oraxen.api.events.OraxenPackPreUploadEvent

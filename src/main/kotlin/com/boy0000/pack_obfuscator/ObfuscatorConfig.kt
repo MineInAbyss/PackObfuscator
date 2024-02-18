@@ -2,8 +2,6 @@ package com.boy0000.pack_obfuscator
 
 import com.charleskorn.kaml.YamlComment
 import kotlinx.serialization.Serializable
-import org.bukkit.Bukkit
-import kotlin.io.path.absolutePathString
 
 @Serializable
 data class ObfuscatorConfig(
@@ -15,6 +13,6 @@ data class ObfuscatorConfig(
     data class PackSquash(
         val enabled: Boolean = true,
         val executablePath: String = "packsquash",
-        val partialPackSquashSettingsPath: String = "packsquash.toml",
+        val settingsPath: String = "packsquash.toml",
     )
 }

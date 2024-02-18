@@ -3,7 +3,6 @@ package com.boy0000.pack_obfuscator
 import com.mineinabyss.idofront.messaging.logError
 import com.mineinabyss.idofront.messaging.logSuccess
 import com.mineinabyss.idofront.messaging.logWarn
-import io.th0rgal.oraxen.api.OraxenPack
 import net.kyori.adventure.key.Key
 import org.bukkit.Material
 import team.unnamed.creative.ResourcePack

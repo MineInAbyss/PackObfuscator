@@ -1,13 +1,11 @@
 package com.boy0000.pack_obfuscator
 
 import com.mineinabyss.idofront.commands.arguments.genericArg
-import com.mineinabyss.idofront.commands.arguments.stringArg
 import com.mineinabyss.idofront.commands.execution.IdofrontCommandExecutor
 import com.mineinabyss.idofront.messaging.error
 import com.mineinabyss.idofront.messaging.logInfo
 import com.mineinabyss.idofront.plugin.Plugins
 import io.th0rgal.oraxen.api.OraxenPack
-import io.th0rgal.oraxen.utils.logs.Logs
 import io.th0rgal.oraxen.utils.logs.Logs.logSuccess
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -21,7 +19,7 @@ class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
             "reload" {
                 action {
                     obfuscator.plugin.createContext()
-                    Logs.logSuccess("Successfully Reloaded OraxenPackObfuscator!")
+                    logSuccess("Successfully Reloaded OraxenPackObfuscator!")
                 }
             }
             "squash" {
