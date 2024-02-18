@@ -20,6 +20,8 @@ import team.unnamed.creative.model.ModelTextures
 import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackReader
 import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter
 import team.unnamed.creative.texture.Texture
+import java.io.File
+import java.nio.file.Path
 import java.util.*
 
 object CreativeObfuscator {
@@ -28,17 +30,16 @@ object CreativeObfuscator {
     private val defaultBlockKeys = Material.entries.filterNot { it.isLegacy }.map { Key.key("minecraft", "block/" + it.key().value()) }
     lateinit var resourcePack: ResourcePack
 
-    fun obfuscate() {
+    fun obfuscate(file: File, output: Path) {
         obfuscatedModels.clear()
         obfuscatedTextures.clear()
-        resourcePack = MinecraftResourcePackReader.minecraft().readFromZipFile(OraxenPack.getPack())
+        resourcePack = MinecraftResourcePackReader.minecraft().readFromZipFile(file)
         obfuscateTextures()
         obfuscateModels()
         obfuscateFonts()
         obfuscateBlockStates()
         obfuscateAtlas()
-        MinecraftResourcePackWriter.minecraft().writeToZipFile(OraxenPack.getPack().toPath().parent.resolve("pack.zip"), resourcePack)
-        OraxenPack.uploadPack()
+        MinecraftResourcePackWriter.minecraft().writeToZipFile(output, resourcePack)
     }
 
     private class ObfuscatedModel(val originalModel: Model, val obfuscatedModel: Model)

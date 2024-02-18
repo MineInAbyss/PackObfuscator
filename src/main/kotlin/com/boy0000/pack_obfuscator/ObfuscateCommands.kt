@@ -11,7 +11,7 @@ class ObfuscateCommands : IdofrontCommandExecutor() {
             "creative" {
                 action {
                     Logs.logInfo("Attempting to Obfuscate OraxenPack via Creative...")
-                    CreativeObfuscator.obfuscate()
+                    CreativeObfuscator.obfuscate(OraxenPack.getPack(), OraxenPack.getPack().toPath().parent.resolve("pack.zip"))
                     Logs.logSuccess("Successfully Obfuscated OraxenPack via Creative!")
                     OraxenPack.uploadPack()
                 }
