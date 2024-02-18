@@ -44,7 +44,7 @@ dependencies {
 
 copyJar {
     destPath.set(project.property("oraxen_plugin_path") as String)
-    jarName.set("OraxenPackObfuscator.jar")
+    jarName.set("PackObfuscator.jar")
     excludePlatformDependencies.set(false)
 }
 
@@ -73,10 +73,10 @@ tasks {
     }
 
     shadowJar {
-        archiveFileName.set("OraxenPackObfuscator.jar")
+        archiveFileName.set("PackObfuscator.jar")
         relocate("kotlin", "com.boy0000.shaded.kotlin")
         relocate("kotlinx", "com.boy0000.shaded.kotlinx")
-        val pluginLoc = project.property("oraxen_plugin_path") as String + "\\OraxenPackObfuscator.jar"
+        val pluginLoc = project.property("oraxen_plugin_path") as String + "\\PackObfuscator.jar"
         //archiveFile.get().asFile.copyTo(layout.projectDirectory.file("run/plugins/ModernLightApi.jar").asFile, true)
         println("Copied to $pluginLoc")
     }
@@ -103,7 +103,7 @@ java {
 
 paper {
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
-    main = "com.boy0000.pack_obfuscator.OraxenPackObfuscator"
+    main = "com.boy0000.pack_obfuscator.PackObfuscator"
     version = "${project.version}"
     apiVersion = "1.20"
     authors = listOf("boy0000")
@@ -112,7 +112,7 @@ paper {
     serverDependencies {
         register("Oraxen") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-            required = true
+            required = false
         }
     }
 }

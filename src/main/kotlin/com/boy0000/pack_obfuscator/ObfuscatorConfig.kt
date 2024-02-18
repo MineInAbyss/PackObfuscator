@@ -1,11 +1,13 @@
 package com.boy0000.pack_obfuscator
 
+import com.charleskorn.kaml.YamlComment
 import kotlinx.serialization.Serializable
 import org.bukkit.Bukkit
 import kotlin.io.path.absolutePathString
 
 @Serializable
 data class ObfuscatorConfig(
+    @YamlComment("Automatically obfuscates packs from supported plugins")
     val autoObfuscate: Boolean = true,
     val packSquash: PackSquash = PackSquash(),
 ) {

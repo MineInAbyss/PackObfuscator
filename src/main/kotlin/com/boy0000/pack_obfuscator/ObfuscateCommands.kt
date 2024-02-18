@@ -1,27 +1,71 @@
 package com.boy0000.pack_obfuscator
 
+import com.mineinabyss.idofront.commands.arguments.genericArg
+import com.mineinabyss.idofront.commands.arguments.stringArg
 import com.mineinabyss.idofront.commands.execution.IdofrontCommandExecutor
+import com.mineinabyss.idofront.messaging.error
+import com.mineinabyss.idofront.messaging.logInfo
+import com.mineinabyss.idofront.plugin.Plugins
 import io.th0rgal.oraxen.api.OraxenPack
 import io.th0rgal.oraxen.utils.logs.Logs
+import io.th0rgal.oraxen.utils.logs.Logs.logSuccess
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
+import java.io.File
 
-class ObfuscateCommands : IdofrontCommandExecutor() {
+class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
 
     override val commands = commands(obfuscator.plugin) {
-        ("oraxen_obf") {
+        ("obfuscate" / "obf") {
             "reload" {
                 action {
                     obfuscator.plugin.createContext()
                     Logs.logSuccess("Successfully Reloaded OraxenPackObfuscator!")
                 }
             }
+            "squash" {
+
+            }
             "creative" {
+                fun file(string: String): File? {
+                    return when (string.lowercase()) {
+                        "oraxen" -> if (Plugins.isEnabled("Oraxen")) OraxenPack.getPack() else null
+                        "itemsadder" -> sender.error("ItemsAdder is not supported yet!").let { null }
+                        else -> File(string.replace("\\", "/")).takeIf { it.exists() }
+                    }
+                }
+                val input: File? by genericArg { file(it)}
+                val output: File? by genericArg { file(it) }
                 action {
-                    Logs.logInfo("Attempting to Obfuscate OraxenPack via Creative...")
-                    CreativeObfuscator.obfuscate(OraxenPack.getPack(), OraxenPack.getPack().toPath().parent.resolve("pack.zip"))
-                    Logs.logSuccess("Successfully Obfuscated OraxenPack via Creative!")
+                    if (input == null) return@action sender.error("Invalid input-path!")
+                    if (output == null) return@action sender.error("Invalid output-path!")
+
+                    logInfo("Attempting to Obfuscate OraxenPack via Creative...")
+                    CreativeObfuscator.obfuscate(input!!, output!!.toPath())
+                    logSuccess("Successfully Obfuscated OraxenPack via Creative!")
                     OraxenPack.uploadPack()
                 }
             }
         }
+    }
+
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
+    ): List<String> {
+        return if (command.name == "obfuscate") {
+            when (args.size) {
+                1 -> listOf("reload", "squash", "creative")
+                2 -> when (args[0]) {
+                    "creative", "squash" -> listOf("oraxen", "itemsadder")
+                    else -> emptyList()
+                }
+
+                else -> emptyList()
+            }
+        } else emptyList()
     }
 }

@@ -28,7 +28,7 @@ object CreativeObfuscator {
 
     private val defaultItemKeys = Material.entries.filterNot { it.isLegacy }.map { Key.key("minecraft", "item/" + it.key().value()) }
     private val defaultBlockKeys = Material.entries.filterNot { it.isLegacy }.map { Key.key("minecraft", "block/" + it.key().value()) }
-    lateinit var resourcePack: ResourcePack
+    private lateinit var resourcePack: ResourcePack
 
     fun obfuscate(file: File, output: Path) {
         obfuscatedModels.clear()

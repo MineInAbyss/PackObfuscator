@@ -22,4 +22,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "OraxenPackObfuscator"
+rootProject.name = "PackObfuscator"

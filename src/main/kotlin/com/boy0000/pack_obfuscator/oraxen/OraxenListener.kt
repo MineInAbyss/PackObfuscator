@@ -1,5 +1,7 @@
-package com.boy0000.pack_obfuscator
+package com.boy0000.pack_obfuscator.oraxen
 
+import com.boy0000.pack_obfuscator.PackObfuscator
+import com.boy0000.pack_obfuscator.obfuscator
 import io.th0rgal.oraxen.api.events.OraxenPackGeneratedEvent
 import io.th0rgal.oraxen.api.events.OraxenPackPreUploadEvent
 import io.th0rgal.oraxen.utils.logs.Logs
@@ -17,8 +19,8 @@ class OraxenListener : Listener {
                 Logs.logError("Skipping PackSquash as it is disabled in the config.")
             } else {
                 Logs.logInfo("Running OraxenPack through PackSquash...")
-                PackSquash.extractExecutable()
-                PackSquash.squashOraxenPack()
+                OraxenPackSquash.extractExecutable()
+                OraxenPackSquash.squashOraxenPack()
                 Logs.logSuccess("Successfully Squashed OraxenPack!")
             }
         }
@@ -28,7 +30,7 @@ class OraxenListener : Listener {
     fun OraxenPackGeneratedEvent.onPackGenerated() {
         if (!obfuscator.config.autoObfuscate) return
         Logs.logInfo("Attempting to Obfuscate OraxenPack...")
-        ObfuscatePack.obfuscate(output)
+        OraxenPackObfuscator.obfuscate(output)
         Logs.logSuccess("Successfully Obfuscated OraxenPack!")
     }
 }

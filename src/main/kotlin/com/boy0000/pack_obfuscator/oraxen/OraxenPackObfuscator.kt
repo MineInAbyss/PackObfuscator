@@ -1,6 +1,6 @@
-package com.boy0000.pack_obfuscator
+package com.boy0000.pack_obfuscator.oraxen
 
-import com.boy0000.pack_obfuscator.ObfuscatePack.substringBetween
+import com.boy0000.pack_obfuscator.substringBetween
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -10,10 +10,8 @@ import java.util.*
 
 private typealias TexturePath = String
 private typealias ModelPath = String
-private typealias PackPath = String
 
-object ObfuscatePack {
-
+object OraxenPackObfuscator {
     fun obfuscate(output: MutableList<VirtualFile>) {
         obfuscatedMap.clear()
         obfuscatedFont.clear()
@@ -31,8 +29,8 @@ object ObfuscatePack {
     private val VirtualFile.modelPath get() = this.path.modelPath
     private val ObfuscatedModel.modelPath get() = this.packPath.modelPath
     private val ModelPath.modelPath get(): String {
-        val namespace = this.substringBetween("assets/", "/")
-        val path = this.substringBetween("$namespace/models/", ".json")
+        val namespace = substringBetween("assets/", "/")
+        val path = substringBetween("$namespace/models/", ".json")
         return if (namespace == "minecraft") path else "$namespace:$path"
     }
     private val VirtualFile.texturePath get() = this.path.texturePath
@@ -144,7 +142,4 @@ object ObfuscatePack {
         }
         output.filter { it.isTexture() && it.texturePath in obfuscatedFont.keys }.forEach { it.path = "assets/minecraft/textures/${obfuscatedFont[it.texturePath]}.png" }
     }
-
-    private fun String.substringBetween(start: String, end: String) = substringAfter(start).substringBefore(end)
-
 }

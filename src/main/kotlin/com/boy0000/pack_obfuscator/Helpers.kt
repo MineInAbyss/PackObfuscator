@@ -4,7 +4,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
-import java.util.zip.ZipOutputStream
+
+fun String.substringBetween(start: String, end: String) = substringAfter(start).substringBefore(end)
 
 fun unzip(zipFile: File, destDir: File) {
     runCatching {

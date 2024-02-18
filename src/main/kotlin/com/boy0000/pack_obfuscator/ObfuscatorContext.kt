@@ -4,6 +4,6 @@ import com.mineinabyss.idofront.di.DI
 
 val obfuscator by DI.observe<ObfuscatorContext>()
 interface ObfuscatorContext {
-    val plugin: OraxenPackObfuscator
+    val plugin: PackObfuscator
     val config: ObfuscatorConfig
 }
