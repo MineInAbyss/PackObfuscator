@@ -7,6 +7,10 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.ProcessBuilder.Redirect
 
+object GenericPackSquash : PackSquash {
+
+}
+
 interface PackSquash {
     fun extractExecutable() {
         if (!obfuscator.plugin.dataFolder.resolve("packsquash.exe").exists()) {

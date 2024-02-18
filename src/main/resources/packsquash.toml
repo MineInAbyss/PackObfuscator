@@ -22,8 +22,6 @@ percentage_of_zip_structures_tuned_for_obfuscation_discretion = 100
 never_store_squash_times = true
 # System dependent values. Use them as-is only if you have a good reason,
 # not just because you have copied and pasted this options file
-threads = 4
-spooling_buffers_size = 128 # MiB
 
 # Per-file options below
 

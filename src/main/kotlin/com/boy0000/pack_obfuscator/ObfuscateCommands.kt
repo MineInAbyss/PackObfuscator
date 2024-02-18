@@ -23,7 +23,11 @@ class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
                 }
             }
             "squash" {
-
+                action {
+                    logInfo("Attemping to squash pack via PackSquash...")
+                    GenericPackSquash.squashPack()
+                    logSuccess("Successfully Squashed pack!")
+                }
             }
             "creative" {
                 fun file(string: String): File? {
@@ -39,9 +43,9 @@ class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
                     if (input == null) return@action sender.error("Invalid input-path!")
                     if (output == null) return@action sender.error("Invalid output-path!")
 
-                    logInfo("Attempting to Obfuscate OraxenPack via Creative...")
+                    logInfo("Attempting to Obfuscate pack...")
                     CreativeObfuscator.obfuscate(input!!, output!!.toPath())
-                    logSuccess("Successfully Obfuscated OraxenPack via Creative!")
+                    logSuccess("Successfully Obfuscated pack!")
                     OraxenPack.uploadPack()
                 }
             }
@@ -58,7 +62,7 @@ class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
             when (args.size) {
                 1 -> listOf("reload", "squash", "creative")
                 2 -> when (args[0]) {
-                    "creative", "squash" -> listOf("oraxen", "itemsadder")
+                    "creative" -> listOf("oraxen", "itemsadder")
                     else -> emptyList()
                 }
 
