@@ -5,7 +5,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
-    id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
+    //id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
     alias(libs.plugins.mia.copyjar)
     alias(libs.plugins.kotlinx.serialization)
 }
@@ -101,18 +102,28 @@ java {
 }
 
 
-paper {
+//paper {
+//    load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
+//    main = "com.boy0000.pack_obfuscator.PackObfuscator"
+//    version = "${project.version}"
+//    apiVersion = "1.20"
+//    authors = listOf("boy0000")
+//    foliaSupported = true
+//
+//    serverDependencies {
+//        register("Oraxen") {
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//            required = false
+//        }
+//    }
+//}
+
+bukkit {
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
     main = "com.boy0000.pack_obfuscator.PackObfuscator"
     version = "${project.version}"
     apiVersion = "1.20"
     authors = listOf("boy0000")
     foliaSupported = true
-
-    serverDependencies {
-        register("Oraxen") {
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-            required = false
-        }
-    }
+    softDepend = listOf("Oraxen")
 }

@@ -51,23 +51,24 @@ object OraxenPackObfuscator {
     private fun obfuscateModels(output: MutableList<VirtualFile>) {
         val models = output.filter { it.isModel() }
         val textures = output.filter { it.isTexture() }
-        val flattenedTextures = obfuscatedMap.values.flatten()
         models.forEach models@{ virtualModel ->
             val virtualModelJson = virtualModel.toJsonElement()?.takeIf { it.isJsonObject }?.asJsonObject ?: return@models
-            val obfuscatedModelName = obfuscatedMap.keys.find { it.packPath == virtualModel.modelPath }?.obfPackPath ?: UUID.randomUUID().toString().replace("-", "")
+            val obfModel = obfuscatedMap.keys.find { it.packPath == virtualModel.modelPath } ?: ObfuscatedModel(virtualModel.modelPath, UUID.randomUUID().toString().replace("-", ""))
             virtualModelJson.getAsJsonObject("textures")?.entrySet()?.toSet()?.mapNotNull textures@{ (key, json) ->
                 val texture = json.asString
-                val obfuscatedTextureName = flattenedTextures.find { it.packPath == texture }?.obfPackPath?: UUID.randomUUID().toString().replace("-", "")
-                val virtualTexture = textures.find { texture == it.texturePath } ?: return@textures null
-                output.find { it.path == virtualTexture.path + ".mcmeta" }?.path = "assets/minecraft/textures/$obfuscatedTextureName.png.mcmeta"
-                obfuscatedMap.computeIfAbsent(ObfuscatedModel(virtualModel.modelPath, obfuscatedModelName)) { mutableSetOf() } += ObfuscatedTexture(virtualTexture.texturePath, obfuscatedTextureName)
-                virtualTexture.path = "assets/minecraft/textures/$obfuscatedTextureName.png"
-                key to obfuscatedTextureName
+                val obfTexture = obfuscatedMap.values.flatten().find { it.packPath == texture }?.obfPackPath?: UUID.randomUUID().toString().replace("-", "")
+                obfuscatedMap.computeIfAbsent(obfModel) { mutableSetOf() } += ObfuscatedTexture(texture, obfTexture)
+                // Attempt to find the texture in the output. If there is no result, it has likely been obfuscated already
+                textures.find { texture == it.texturePath }?.let {  virtualFile ->
+                    output.find { it.path == virtualFile.texturePath + ".mcmeta" }?.path = "assets/minecraft/textures/$obfTexture.png.mcmeta"
+                    virtualFile.path = "assets/minecraft/textures/$obfTexture.png"
+                }
+                key to obfTexture
             }?.forEach { (key, obf) ->
                 virtualModelJson.add("textures", virtualModelJson.getAsJsonObject("textures").apply { addProperty(key, obf) })
-            } ?: run { obfuscatedMap.putIfAbsent(ObfuscatedModel(virtualModel.modelPath, obfuscatedModelName), mutableSetOf()) }
+            } ?: run { obfuscatedMap.putIfAbsent(obfModel, mutableSetOf()) }
             virtualModel.inputStream = virtualModelJson.toString().byteInputStream()
-            virtualModel.path = "assets/minecraft/models/$obfuscatedModelName.json"
+            virtualModel.path = "assets/minecraft/models/${obfModel.obfPackPath}.json"
         }
     }
     private fun obfuscateParentModels(output: List<VirtualFile>) {
