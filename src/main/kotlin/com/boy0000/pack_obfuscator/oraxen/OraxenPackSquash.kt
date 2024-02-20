@@ -13,7 +13,8 @@ object OraxenPackSquash: PackSquash {
     val outputZip = obfuscator.plugin.dataFolder.resolve("oraxen/pack.zip")
     override fun extractExecutable() {
         super.extractExecutable()
-        val toml = File(obfuscator.config.packSquash.settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(obfuscator.config.packSquash.settingsPath)
+        val settingsPath = obfuscator.config.packSquash.settingsPath
+        val toml = File(settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(settingsPath)
         val packDir = inputPackDir.absolutePath.replace("\\", "/")
         val outputPack = outputZip.absolutePath.replace("\\", "/")
         val tomlContent = toml.readText()

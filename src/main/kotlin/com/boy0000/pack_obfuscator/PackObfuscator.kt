@@ -1,5 +1,6 @@
 package com.boy0000.pack_obfuscator
 
+import com.boy0000.pack_obfuscator.crucible.CrucibleListener
 import com.boy0000.pack_obfuscator.oraxen.OraxenListener
 import com.mineinabyss.idofront.config.config
 import com.mineinabyss.idofront.di.DI
@@ -15,6 +16,11 @@ class PackObfuscator : JavaPlugin() {
         if (Plugins.isEnabled("Oraxen")) {
             logSuccess("Oraxen detected! Registering OraxenListener...")
             listeners(OraxenListener())
+        }
+
+        if (Plugins.isEnabled("MythicCrucible")) {
+            logSuccess("MythicCrucible detected! Registering CrucibleListener...")
+            listeners(CrucibleListener())
         }
     }
 }

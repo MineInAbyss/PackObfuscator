@@ -21,12 +21,15 @@ repositories {
     maven("https://repo.mineinabyss.com/releases")
     maven("https://repo.oraxen.com/releases")
     maven("https://repo.unnamed.team/repository/unnamed-public/")
+    maven("https://mvn.lumine.io/repository/maven-public/") { metadataSources { artifact() } }// MythicMobs
     mavenLocal()
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("io.th0rgal:oraxen:1.170.0")
+    compileOnly("io.lumine:MythicCrucible:2.0.0-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.6.0")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.idofront.commands)
@@ -125,5 +128,5 @@ bukkit {
     apiVersion = "1.20"
     authors = listOf("boy0000")
     foliaSupported = true
-    softDepend = listOf("Oraxen")
+    softDepend = listOf("Oraxen", "MythicCrucible")
 }

@@ -6,9 +6,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ObfuscatorConfig(
     @YamlComment("Automatically obfuscates packs from supported plugins")
-    val autoObfuscate: Boolean = true,
+    val oraxen: Oraxen = Oraxen(),
+    val crucible: Crucible = Crucible(),
     val packSquash: PackSquash = PackSquash(),
 ) {
+
+    @Serializable
+    data class Oraxen(val obfuscate: Boolean = true, )
+
+    @Serializable
+    data class Crucible(val obfuscate: Boolean = true)
+
     @Serializable
     data class PackSquash(
         val enabled: Boolean = true,

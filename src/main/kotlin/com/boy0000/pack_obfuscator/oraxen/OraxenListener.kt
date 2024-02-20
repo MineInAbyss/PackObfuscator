@@ -27,7 +27,7 @@ class OraxenListener : Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun OraxenPackGeneratedEvent.onPackGenerated() {
-        if (!obfuscator.config.autoObfuscate) return
+        if (!obfuscator.config.oraxen.obfuscate) return
         Logs.logInfo("Attempting to Obfuscate OraxenPack...")
         OraxenPackObfuscator.obfuscate(output)
         Logs.logSuccess("Successfully Obfuscated OraxenPack!")
