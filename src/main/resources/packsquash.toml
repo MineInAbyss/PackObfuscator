@@ -3,8 +3,8 @@
 # spans until the end of the line
 
 # Global options
-pack_directory = '<server>\\plugins\\OraxenPackObfuscator\\oraxenPack'
-output_file_path = '<server>\\plugins\\Oraxen\\pack.zip'
+pack_directory = '<server>\\plugins\\PluginName\\pack'
+output_file_path = '<server>\\plugins\\PluginName\\pack.zip'
 recompress_compressed_files = true
 zip_compression_iterations = 5
 automatic_minecraft_quirks_detection = true

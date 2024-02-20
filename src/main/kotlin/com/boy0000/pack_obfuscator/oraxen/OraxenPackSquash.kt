@@ -9,26 +9,15 @@ import java.io.File
 
 object OraxenPackSquash: PackSquash {
 
-    val inputPackDir = obfuscator.plugin.dataFolder.resolve("oraxen/pack/")
-    val outputZip = obfuscator.plugin.dataFolder.resolve("oraxen/pack.zip")
-    override fun extractExecutable() {
-        super.extractExecutable()
-        val settingsPath = obfuscator.config.packSquash.settingsPath
-        val toml = File(settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(settingsPath)
-        val packDir = inputPackDir.absolutePath.replace("\\", "/")
-        val outputPack = outputZip.absolutePath.replace("\\", "/")
-        val tomlContent = toml.readText()
-            .replace("pack_directory = .*".toRegex(), "pack_directory = \'${packDir}\'")
-            .replace("output_file_path = .*".toRegex(), "output_file_path = \'${outputPack}\'")
-        toml.writeText(tomlContent)
-    }
+    override val inputDir = obfuscator.plugin.dataFolder.resolve("oraxen/pack/")
+    override val outputZip = obfuscator.plugin.dataFolder.resolve("oraxen/pack.zip")
 
     fun squashOraxenPack() {
-        unzip(OraxenPack.getPack(), inputPackDir)
+        unzip(OraxenPack.getPack(), inputDir)
 
         super.squashPack()
 
-        inputPackDir.deleteRecursively()
+        inputDir.deleteRecursively()
         outputZip.copyTo(OraxenPack.getPack(), true)
     }
 

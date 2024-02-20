@@ -18,7 +18,7 @@ class OraxenListener : Listener {
                 Logs.logError("Skipping PackSquash as it is disabled in the config.")
             } else {
                 Logs.logInfo("Running OraxenPack through PackSquash...")
-                OraxenPackSquash.extractExecutable()
+                OraxenPackSquash.extractPackSquashFiles()
                 OraxenPackSquash.squashOraxenPack()
                 Logs.logSuccess("Successfully Squashed OraxenPack!")
             }

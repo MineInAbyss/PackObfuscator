@@ -47,28 +47,22 @@ object CreativeObfuscator {
     private val obfuscatedTextures = mutableSetOf<ObfuscatedTexture>()
 
     private fun obfuscateAtlas() {
-        logWarn("Obfuscating atlas...")
         resourcePack.atlases().filterNotNull().forEach { atlas ->
             resourcePack.atlas(atlas.toBuilder().sources(atlas.sources().mapNotNull { it as? SingleAtlasSource }.map { source ->
                 AtlasSource.single(Key.key(obfuscatedTextures.find { it.originalTexture.keyNoPng == source.resourceNoPng }?.obfuscatedTexture?.keyNoPng ?: source.resourceNoPng))
             }).build())
         }
-
-        logSuccess("Obfuscated atlas!")
     }
 
     private fun obfuscateFonts() {
-        logWarn("Obfuscating fonts...")
         resourcePack.fonts().mapNotNull { it }.forEach { font ->
             resourcePack.font(font.toBuilder().providers(font.providers().filterNotNull().mapNotNull { it as? BitMapFontProvider }.map { bitmapProvider ->
                 bitmapProvider.file(obfuscatedTextures.find { it.originalTexture.keyNoPng == bitmapProvider.fileNoPng }?.obfuscatedTexture?.key() ?: bitmapProvider.file())
             }).build())
         }
-        logSuccess("Obfuscated fonts!")
     }
 
     private fun obfuscateBlockStates() {
-        logWarn("Obfuscating block states...")
         resourcePack.blockStates().filterNotNull().forEach { blockState ->
             val multiparts = blockState.multipart().map {
                 Selector.of(it.condition(), MultiVariant.of(it.variant().variants().map { v -> v.obfuscateVariant() }))
@@ -83,7 +77,6 @@ object CreativeObfuscator {
             blockState.variants().putAll(variants)
             resourcePack.blockState(blockState)
         }
-        logSuccess("Obfuscated block states!")
     }
 
     private fun Variant.obfuscateVariant(): Variant {
@@ -92,7 +85,6 @@ object CreativeObfuscator {
     }
 
     private fun obfuscateTextures() {
-        logWarn("Obfuscating textures...")
         resourcePack.textures().filterNotNull().forEach { texture ->
             val obfuscatedTexture = texture.rename(Key.key(texture.key().namespace(), UUID.randomUUID().toString() + ".png"))
             obfuscatedTextures += ObfuscatedTexture(texture, obfuscatedTexture)
@@ -103,10 +95,8 @@ object CreativeObfuscator {
             resourcePack.texture(it.obfuscatedTexture)
         }
 
-        logSuccess("Obfuscated textures!")
     }
     private fun obfuscateModels() {
-        logWarn("Obfuscating models...")
         resourcePack.models().filterNotNull().forEach models@{ model ->
             val obfuscatedModel = obfuscateModel(model)
             obfuscatedModel.overrides().filterNotNull().map { override ->
@@ -121,7 +111,6 @@ object CreativeObfuscator {
 
         obfuscatedModels.map { it.originalModel.key() }.forEach(resourcePack::removeModel)
         obfuscatedModels.map { it.obfuscatedModel }.toSet().forEach(resourcePack::model)
-        logSuccess("Obfuscated models!")
     }
 
     private fun obfuscateModel(model: Model): Model {

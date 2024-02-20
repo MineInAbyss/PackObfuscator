@@ -24,8 +24,8 @@ class ModelEngineListener : Listener {
         }
         if (obfuscator.config.packSquash.enabled) {
             logInfo("Running ModelEnginePack through PackSquash...")
-            ModelEnginePackSquash.extractExecutable()
-            ModelEnginePackSquash.squashModelEnginePack()
+            ModelEnginePackSquash.extractPackSquashFiles()
+            ModelEnginePackSquash.squashPack()
             logSuccess("Successfully Squashed ModelEnginePack!")
         }
     }
