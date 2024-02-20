@@ -1,5 +1,3 @@
-import net.minecrell.pluginyml.paper.PaperPluginDescription
-
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
@@ -30,6 +28,7 @@ dependencies {
     compileOnly("io.th0rgal:oraxen:1.170.0")
     compileOnly("io.lumine:MythicCrucible:2.0.0-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.6.0")
+    compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.4")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.idofront.commands)
@@ -47,7 +46,7 @@ dependencies {
 }
 
 copyJar {
-    destPath.set(project.property("oraxen_plugin_path") as String)
+    destPath.set(project.property("plugin_path") as String)
     jarName.set("PackObfuscator.jar")
     excludePlatformDependencies.set(false)
 }

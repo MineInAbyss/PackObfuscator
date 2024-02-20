@@ -21,9 +21,8 @@ class CrucibleListener : Listener {
 
         if (obfuscator.config.packSquash.enabled) {
             crucible.logger.info("Running CruciblePack through PackSquash...")
-            val packSquash = CruciblePackSquash()
-            packSquash.extractExecutable()
-            packSquash.squashCruciblePack()
+            CruciblePackSquash.extractExecutable()
+            CruciblePackSquash.squashCruciblePack()
             crucible.logger.info("Successfully Squashed CruciblePack!")
         }
     }

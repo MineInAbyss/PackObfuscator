@@ -4,14 +4,15 @@ import com.boy0000.pack_obfuscator.PackSquash
 import com.boy0000.pack_obfuscator.obfuscator
 import com.boy0000.pack_obfuscator.oraxen.OraxenPackSquash
 import com.boy0000.pack_obfuscator.unzip
+import com.mineinabyss.idofront.messaging.logInfo
 import io.lumine.mythiccrucible.MythicCrucible
-import io.th0rgal.oraxen.api.OraxenPack
 import java.io.File
+import java.util.logging.Logger
 
-class CruciblePackSquash : PackSquash {
+object CruciblePackSquash : PackSquash {
 
-    val inputPackDir = obfuscator.plugin.dataFolder.resolve("crucible/pack/")
-    val outputZip = obfuscator.plugin.dataFolder.resolve("crucible/pack.zip")
+    private val inputPackDir = obfuscator.plugin.dataFolder.resolve("crucible/pack/")
+    private val outputZip = obfuscator.plugin.dataFolder.resolve("crucible/pack.zip")
 
     override fun extractExecutable() {
         super.extractExecutable()
