@@ -46,7 +46,7 @@ dependencies {
 }
 
 copyJar {
-    destPath.set(project.property("plugin_path") as String)
+    destPath.set(project.property("oraxen_plugin_path") as String)
     jarName.set("PackObfuscator.jar")
     excludePlatformDependencies.set(false)
 }
