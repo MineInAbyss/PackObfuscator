@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.boy0000"
-version = "1.0-SNAPSHOT"
+version = "0.1"
 
 repositories {
     mavenCentral()
@@ -18,14 +18,14 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.mineinabyss.com/releases")
     maven("https://repo.oraxen.com/releases")
+    maven("https://repo.oraxen.com/snapshots")
     maven("https://repo.unnamed.team/repository/unnamed-public/")
     maven("https://mvn.lumine.io/repository/maven-public/") { metadataSources { artifact() } }// MythicMobs
-    mavenLocal()
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("io.th0rgal:oraxen:1.170.0")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.th0rgal:oraxen:1.170.0-SNAPSHOT")
     compileOnly("io.lumine:MythicCrucible:2.0.0-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.6.0")
     compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.4")
@@ -40,15 +40,20 @@ dependencies {
     implementation(libs.kotlinx.serialization.kaml)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines)
-    implementation("team.unnamed:creative-api:1.3.0")
-    implementation("team.unnamed:creative-server:1.3.0")
-    implementation("team.unnamed:creative-serializer-minecraft:1.3.0")
+    implementation(libs.creative.api)
+    implementation(libs.creative.serializer.minecraft)
 }
 
 copyJar {
     destPath.set(project.property("oraxen_plugin_path") as String)
-    jarName.set("PackObfuscator.jar")
+    jarName.set("PackObfuscator-$version.jar")
     excludePlatformDependencies.set(false)
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor(0, "seconds")
+    }
 }
 
 tasks {

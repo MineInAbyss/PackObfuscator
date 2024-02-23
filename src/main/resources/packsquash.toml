@@ -3,23 +3,23 @@
 # spans until the end of the line
 
 # Global options
-pack_directory = '<server>\\plugins\\PluginName\\pack'
-output_file_path = '<server>\\plugins\\PluginName\\pack.zip'
-recompress_compressed_files = true
-zip_compression_iterations = 5
-automatic_minecraft_quirks_detection = true
+pack_directory = ''
+output_file_path = ''
+recompress_compressed_files = false
+zip_compression_iterations = 2
+automatic_minecraft_quirks_detection = false
 # The value of this option is ignored due to automatic quirk detection
 # being enabled, but this usually does not matter
-work_around_minecraft_quirks = ['grayscale_images_gamma_miscorrection', 'java8_zip_parsing']
 allow_mods = ['OptiFine']
 skip_pack_icon = false
-validate_pack_metadata_file = true
-ignore_system_and_hidden_files = false
-zip_spec_conformance_level = 'disregard'
+validate_pack_metadata_file = false
+ignore_system_and_hidden_files = true
+zip_spec_conformance_level = 'pedantic'
 # These two are actually ignored due to the ZIP spec conformance level
-size_increasing_zip_obfuscation = true
-percentage_of_zip_structures_tuned_for_obfuscation_discretion = 100
+size_increasing_zip_obfuscation = false
+percentage_of_zip_structures_tuned_for_obfuscation_discretion = 0
 never_store_squash_times = true
+spooling_buffers_size = 4096
 # System dependent values. Use them as-is only if you have a good reason,
 # not just because you have copied and pasted this options file
 
@@ -43,10 +43,9 @@ delete_bloat_keys = false
 
 # Compress textures losslessly no matter what. Keep them small
 ['**/*.png']
-image_data_compression_iterations = 15
+image_data_compression_iterations = 1
 color_quantization_target = 'none'
-maximum_width_and_height = 2048
-skip_alpha_optimizations = true
+skip_alpha_optimizations = false
 
 # Don't minify shaders
 ['**/*.{fsh,vsh}']
