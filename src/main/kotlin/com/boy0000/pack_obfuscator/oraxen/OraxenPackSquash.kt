@@ -5,7 +5,6 @@ import com.boy0000.pack_obfuscator.obfuscator
 import com.boy0000.pack_obfuscator.unzip
 import io.th0rgal.oraxen.api.OraxenPack
 import io.th0rgal.oraxen.utils.logs.Logs
-import java.io.File
 
 object OraxenPackSquash: PackSquash {
 
@@ -14,8 +13,8 @@ object OraxenPackSquash: PackSquash {
 
     fun squashOraxenPack() {
         unzip(OraxenPack.getPack(), inputDir)
-
-        super.squashPack()
+        val oraxenSquash = obfuscator.config.oraxen.packSquash
+        super.squashPack(oraxenSquash.executablePath, oraxenSquash.settingsPath)
 
         inputDir.deleteRecursively()
         outputZip.copyTo(OraxenPack.getPack(), true)
@@ -30,6 +29,6 @@ object OraxenPackSquash: PackSquash {
     }
 
     override fun logSquashInfo(line: String) {
-        if (obfuscator.config.packSquash.debug) Logs.logInfo("Info while squashing OraxenPack: $line")
+        if (obfuscator.config.oraxen.packSquash.debug) Logs.logInfo("Info while squashing OraxenPack: $line")
     }
 }

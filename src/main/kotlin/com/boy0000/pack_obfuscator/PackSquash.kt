@@ -11,7 +11,7 @@ import java.lang.ProcessBuilder.Redirect
 
 object GenericPackSquash : PackSquash {
     private val settingToml: File get() {
-        val settingsPath = obfuscator.config.packSquash.settingsPath
+        val settingsPath = obfuscator.config.generic.packSquash.settingsPath
         return File(settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(settingsPath)
     }
     override val inputDir: File
@@ -24,7 +24,7 @@ interface PackSquash {
 
     val inputDir: File
     val outputZip: File
-    fun extractPackSquashFiles() {
+    fun extractPackSquashFiles(settingsPath: String) {
         if (!obfuscator.plugin.dataFolder.resolve("packsquash.exe").exists()) {
             logInfo("Extracting PackSquash executable...")
             obfuscator.plugin.saveResource("packsquash.exe", false)
@@ -32,7 +32,6 @@ interface PackSquash {
 
         val packDir = inputDir.absolutePath.replace("\\", "/")
         val outputPack = outputZip.absolutePath.replace("\\", "/")
-        val settingsPath = obfuscator.config.packSquash.settingsPath
         val toml = File(settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(settingsPath)
         if (!toml.exists()) {
             logInfo("Extracting PackSquash settings...")
@@ -45,12 +44,10 @@ interface PackSquash {
         toml.writeText(tomlContent)
     }
 
-    fun squashPack() {
-        val packSquashExecutablePath = obfuscator.config.packSquash.executablePath
-        val partialPackSquashSettingsPath = obfuscator.config.packSquash.settingsPath
+    fun squashPack(executablePath: String = obfuscator.config.generic.packSquash.executablePath, settingsPath: String = obfuscator.config.generic.packSquash.settingsPath) {
 
         runCatching {
-            val processBuilder = ProcessBuilder(packSquashExecutablePath, partialPackSquashSettingsPath)
+            val processBuilder = ProcessBuilder(executablePath, settingsPath)
             processBuilder.directory(obfuscator.plugin.dataFolder)
             processBuilder.redirectInput(Redirect.PIPE)
             processBuilder.redirectOutput(Redirect.PIPE)
@@ -84,6 +81,6 @@ interface PackSquash {
     }
 
     fun logSquashInfo(line: String) {
-        if (obfuscator.config.packSquash.debug) logInfo("Info while squashing pack: $line")
+        if (obfuscator.config.generic.packSquash.debug) logInfo("Info while squashing pack: $line")
     }
 }

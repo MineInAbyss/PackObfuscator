@@ -22,10 +22,12 @@ class ModelEngineListener : Listener {
             CreativeObfuscator.obfuscate(megZipped, megZipped.toPath())
             logSuccess("Successfully Obfuscated ModelEnginePack!")
         }
-        if (obfuscator.config.packSquash.enabled) {
+
+        val megSquash = obfuscator.config.modelEngine.packSquash
+        if (megSquash.enabled) {
             logInfo("Running ModelEnginePack through PackSquash...")
-            ModelEnginePackSquash.extractPackSquashFiles()
-            ModelEnginePackSquash.squashPack()
+            ModelEnginePackSquash.extractPackSquashFiles(megSquash.settingsPath)
+            ModelEnginePackSquash.squashPack(megSquash.executablePath, megSquash.settingsPath)
             logSuccess("Successfully Squashed ModelEnginePack!")
         }
     }

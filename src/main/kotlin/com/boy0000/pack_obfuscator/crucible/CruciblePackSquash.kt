@@ -2,10 +2,8 @@ package com.boy0000.pack_obfuscator.crucible
 
 import com.boy0000.pack_obfuscator.PackSquash
 import com.boy0000.pack_obfuscator.obfuscator
-import com.boy0000.pack_obfuscator.oraxen.OraxenPackSquash
 import com.boy0000.pack_obfuscator.unzip
 import io.lumine.mythiccrucible.MythicCrucible
-import java.io.File
 
 object CruciblePackSquash : PackSquash {
 
@@ -14,8 +12,8 @@ object CruciblePackSquash : PackSquash {
 
     fun squashCruciblePack() {
         unzip(MythicCrucible.inst().packGenerationManager.zippedOutput, inputDir)
-
-        super.squashPack()
+        val crucibleSquash = obfuscator.config.crucible.packSquash
+        super.squashPack(crucibleSquash.executablePath, crucibleSquash.settingsPath)
 
         inputDir.deleteRecursively()
         outputZip.copyTo(MythicCrucible.inst().packGenerationManager.zippedOutput, true)

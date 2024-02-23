@@ -14,11 +14,10 @@ class OraxenListener : Listener {
     @EventHandler
     fun OraxenPackPreUploadEvent.onPreUpload() {
         runBlocking {
-            if (!obfuscator.config.packSquash.enabled) {
-                Logs.logError("Skipping PackSquash as it is disabled in the config.")
-            } else {
+            val oraxenSquash = obfuscator.config.oraxen.packSquash
+            if (oraxenSquash.enabled) {
                 Logs.logInfo("Running OraxenPack through PackSquash...")
-                OraxenPackSquash.extractPackSquashFiles()
+                OraxenPackSquash.extractPackSquashFiles(oraxenSquash.settingsPath)
                 OraxenPackSquash.squashOraxenPack()
                 Logs.logSuccess("Successfully Squashed OraxenPack!")
             }
