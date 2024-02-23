@@ -13,7 +13,7 @@ object CruciblePackSquash : PackSquash {
     fun squashCruciblePack() {
         unzip(MythicCrucible.inst().packGenerationManager.zippedOutput, inputDir)
         val crucibleSquash = obfuscator.config.crucible.packSquash
-        super.squashPack(crucibleSquash.executablePath, crucibleSquash.settingsPath)
+        super.squashPack(crucibleSquash)
 
         inputDir.deleteRecursively()
         outputZip.copyTo(MythicCrucible.inst().packGenerationManager.zippedOutput, true)

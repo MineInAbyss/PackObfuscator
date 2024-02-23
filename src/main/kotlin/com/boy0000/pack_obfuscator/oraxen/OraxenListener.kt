@@ -17,7 +17,7 @@ class OraxenListener : Listener {
             val oraxenSquash = obfuscator.config.oraxen.packSquash
             if (oraxenSquash.enabled) {
                 Logs.logInfo("Running OraxenPack through PackSquash...")
-                OraxenPackSquash.extractPackSquashFiles(oraxenSquash.settingsPath)
+                OraxenPackSquash.extractPackSquashConfig(oraxenSquash)
                 OraxenPackSquash.squashOraxenPack()
                 Logs.logSuccess("Successfully Squashed OraxenPack!")
             }

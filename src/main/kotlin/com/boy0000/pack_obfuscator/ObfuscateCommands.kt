@@ -69,9 +69,15 @@ class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
             }
         }
         action {
+            val packSquash = when (squasher) {
+                is OraxenPackSquash -> obfuscator.config.oraxen.packSquash
+                is CruciblePackSquash -> obfuscator.config.crucible.packSquash
+                is ModelEnginePackSquash -> obfuscator.config.modelEngine.packSquash
+                else -> obfuscator.config.generic.packSquash
+            }
             squasher?.let {
                 logInfo("Attemping to squash pack via ${it::class.simpleName}...")
-                it.squashPack()
+                it.squashPack(packSquash)
                 logSuccess("Successfully Squashed pack!")
             } ?: sender.error("Invalid pack!")
         }

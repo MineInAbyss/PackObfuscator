@@ -14,7 +14,7 @@ object OraxenPackSquash: PackSquash {
     fun squashOraxenPack() {
         unzip(OraxenPack.getPack(), inputDir)
         val oraxenSquash = obfuscator.config.oraxen.packSquash
-        super.squashPack(oraxenSquash.executablePath, oraxenSquash.settingsPath)
+        super.squashPack(oraxenSquash)
 
         inputDir.deleteRecursively()
         outputZip.copyTo(OraxenPack.getPack(), true)

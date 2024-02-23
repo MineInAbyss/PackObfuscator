@@ -26,8 +26,8 @@ class ModelEngineListener : Listener {
         val megSquash = obfuscator.config.modelEngine.packSquash
         if (megSquash.enabled) {
             logInfo("Running ModelEnginePack through PackSquash...")
-            ModelEnginePackSquash.extractPackSquashFiles(megSquash.settingsPath)
-            ModelEnginePackSquash.squashPack(megSquash.executablePath, megSquash.settingsPath)
+            ModelEnginePackSquash.extractPackSquashConfig(megSquash)
+            ModelEnginePackSquash.squashPack(megSquash)
             logSuccess("Successfully Squashed ModelEnginePack!")
         }
     }

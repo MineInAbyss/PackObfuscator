@@ -22,7 +22,7 @@ class CrucibleListener : Listener {
         val crucibleSquash = obfuscator.config.crucible.packSquash
         if (crucibleSquash.enabled) {
             crucible.logger.info("Running CruciblePack through PackSquash...")
-            CruciblePackSquash.extractPackSquashFiles(crucibleSquash.settingsPath)
+            CruciblePackSquash.extractPackSquashConfig(crucibleSquash)
             CruciblePackSquash.squashCruciblePack()
             crucible.logger.info("Successfully Squashed CruciblePack!")
         }

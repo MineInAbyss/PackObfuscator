@@ -1,6 +1,5 @@
 package com.boy0000.pack_obfuscator
 
-import com.boy0000.pack_obfuscator.modelengine.ModelEnginePackSquash
 import com.mineinabyss.idofront.messaging.logError
 import com.mineinabyss.idofront.messaging.logInfo
 import com.mineinabyss.idofront.messaging.logWarn
@@ -24,15 +23,10 @@ interface PackSquash {
 
     val inputDir: File
     val outputZip: File
-    fun extractPackSquashFiles(settingsPath: String) {
-        if (!obfuscator.plugin.dataFolder.resolve("packsquash.exe").exists()) {
-            logInfo("Extracting PackSquash executable...")
-            obfuscator.plugin.saveResource("packsquash.exe", false)
-        }
-
+    fun extractPackSquashConfig(packsquash: ObfuscatorConfig.PackSquash) {
         val packDir = inputDir.absolutePath.replace("\\", "/")
         val outputPack = outputZip.absolutePath.replace("\\", "/")
-        val toml = File(settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(settingsPath)
+        val toml = File(packsquash.settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(packsquash.settingsPath)
         if (!toml.exists()) {
             logInfo("Extracting PackSquash settings...")
             obfuscator.plugin.saveResource("packsquash.toml", false)
@@ -44,10 +38,11 @@ interface PackSquash {
         toml.writeText(tomlContent)
     }
 
-    fun squashPack(executablePath: String = obfuscator.config.generic.packSquash.executablePath, settingsPath: String = obfuscator.config.generic.packSquash.settingsPath) {
+    fun squashPack(packsquash: ObfuscatorConfig.PackSquash) {
+        if (!packsquash.validateExecutable()) return logSquashError("PackSquash executable not found, skipping process...")
 
         runCatching {
-            val processBuilder = ProcessBuilder(executablePath, settingsPath)
+            val processBuilder = ProcessBuilder(packsquash.executablePath, packsquash.settingsPath)
             processBuilder.directory(obfuscator.plugin.dataFolder)
             processBuilder.redirectInput(Redirect.PIPE)
             processBuilder.redirectOutput(Redirect.PIPE)
