@@ -29,7 +29,7 @@ data class ObfuscatorConfig(
     @Serializable
     data class PackSquash(
         val enabled: Boolean = true,
-        val executablePath: String = "packsquash.exe",
+        val executablePath: String = if (operatingSystem == "windows") "packsquash.exe" else "packsquash",
         val settingsPath: String = "packsquash.toml",
         @YamlComment("If true, all squash-info will be output, not just errors and warnings")
         val debug: Boolean = false,

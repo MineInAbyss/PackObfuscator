@@ -37,3 +37,6 @@ fun unzip(zipFile: File, destDir: File) {
         it.printStackTrace()
     }
 }
+
+val operatingSystem = System.getProperty("os.name").lowercase()
+fun String.correctWindowsPath() = /*if (operatingSystem == "windows") */replace("\\", "/")/* else this*/

@@ -89,7 +89,7 @@ class ObfuscateCommands : IdofrontCommandExecutor(), TabCompleter {
                 "itemsadder" -> sender.error("ItemsAdder is not supported yet!").let { null }
                 "crucible" -> if (Plugins.isEnabled("MythicCrucible")) MythicCrucible.inst().packGenerationManager.zippedOutput else null
                 "modelengine" -> if (Plugins.isEnabled("ModelEngine")) ModelEnginePackSquash.outputZip else null
-                else -> File(string.replace("\\", "/")).takeIf { it.exists() }
+                else -> File(string.correctWindowsPath()).takeIf { it.exists() }
             }
         }
         val input: File? by genericArg { file(it)}

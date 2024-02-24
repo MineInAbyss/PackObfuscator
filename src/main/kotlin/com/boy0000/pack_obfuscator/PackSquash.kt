@@ -24,8 +24,8 @@ interface PackSquash {
     val inputDir: File
     val outputZip: File
     fun extractPackSquashConfig(packsquash: ObfuscatorConfig.PackSquash) {
-        val packDir = inputDir.absolutePath.replace("\\", "/")
-        val outputPack = outputZip.absolutePath.replace("\\", "/")
+        val packDir = inputDir.absolutePath.correctWindowsPath()
+        val outputPack = outputZip.absolutePath.correctWindowsPath()
         val toml = File(packsquash.settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(packsquash.settingsPath)
         if (!toml.exists()) {
             logInfo("Extracting PackSquash settings...")
