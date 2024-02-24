@@ -47,7 +47,7 @@ dependencies {
 }
 
 copyJar {
-    destPath.set(project.property("oraxen_plugin_path") as String)
+    destPath.set(kotlin.runCatching { project.property("oraxen_plugin_path") }.getOrNull() as? String ?: "build/libs")
     jarName.set("PackObfuscator-$version.jar")
     excludePlatformDependencies.set(false)
 }
