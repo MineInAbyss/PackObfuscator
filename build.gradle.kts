@@ -1,10 +1,12 @@
+import io.papermc.paperweight.util.configureTask
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     //id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
+    alias(libs.plugins.shadowjar)
     alias(libs.plugins.mia.copyjar)
     alias(libs.plugins.kotlinx.serialization)
 }
@@ -58,10 +60,6 @@ configurations.all {
 
 tasks {
 
-    /*assemble {
-        dependsOn(reobfJar)
-    }*/
-
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -89,19 +87,9 @@ tasks {
         println("Copied to $pluginLoc")
     }
 
-    copyJar.get().dependsOn(shadowJar)
-
     build {
         dependsOn(copyJar)
     }
-
-    /*
-    reobfJar {
-      // This is an example of how you might change the output location for reobfJar. It's recommended not to do this
-      // for a variety of reasons, however it's asked frequently enough that an example of how to do it is included here.
-      outputJar.set(layout.buildDirectory.file("libs/PaperweightTestPlugin-${project.version}.jar"))
-    }
-     */
 }
 
 java {
