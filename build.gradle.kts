@@ -1,16 +1,16 @@
 import io.papermc.paperweight.util.configureTask
 
 plugins {
-    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
-    id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
-    //id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
+    alias(idofrontLibs.plugins.kotlin.jvm)
+    alias(idofrontLibs.plugins.kotlinx.serialization)
     alias(idofrontLibs.plugins.mia.papermc)
     alias(idofrontLibs.plugins.shadowjar)
     alias(idofrontLibs.plugins.mia.copyjar)
     alias(idofrontLibs.plugins.mia.autoversion)
     alias(idofrontLibs.plugins.mia.publication)
-    alias(idofrontLibs.plugins.kotlin.jvm)
-    alias(idofrontLibs.plugins.kotlinx.serialization)
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
+    id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
+    //id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
 }
 
 group = "com.boy0000"
