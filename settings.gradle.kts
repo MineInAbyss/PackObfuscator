@@ -2,11 +2,8 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven("https://repo.mineinabyss.com/releases")
-        maven("https://repo.papermc.io/repository/maven-public/")
-    }
-
-    plugins {
-        kotlin("jvm") version "1.9.0"
+        maven("https://repo.mineinabyss.com/snapshots")
+        maven("https://repo.papermc.io/repository/maven-public/") //Paper
     }
 }
 
@@ -15,10 +12,14 @@ dependencyResolutionManagement {
 
     repositories {
         maven("https://repo.mineinabyss.com/releases")
+        maven("https://repo.mineinabyss.com/snapshots")
     }
 
     versionCatalogs {
-        create("libs").from("com.mineinabyss:catalog:$idofrontVersion")
+        create("idofrontLibs") {
+            from("com.mineinabyss:catalog:$idofrontVersion")
+            version("oraxen", "1.170.0-SNAPSHOT")
+        }
     }
 }
 

@@ -1,16 +1,16 @@
 import io.papermc.paperweight.util.configureTask
 
 plugins {
-    id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     //id("net.minecrell.plugin-yml.paper") version "0.6.0" // Generates plugin.yml
-    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
-    alias(libs.plugins.shadowjar)
-    alias(libs.plugins.mia.copyjar)
-    alias(libs.plugins.mia.autoversion)
-    alias(libs.plugins.mia.publication)
-    alias(libs.plugins.kotlinx.serialization)
+    alias(idofrontLibs.plugins.mia.papermc)
+    alias(idofrontLibs.plugins.shadowjar)
+    alias(idofrontLibs.plugins.mia.copyjar)
+    alias(idofrontLibs.plugins.mia.autoversion)
+    alias(idofrontLibs.plugins.mia.publication)
+    alias(idofrontLibs.plugins.kotlin.jvm)
+    alias(idofrontLibs.plugins.kotlinx.serialization)
 }
 
 group = "com.boy0000"
@@ -18,8 +18,6 @@ version = "0.1"
 
 repositories {
     mavenCentral()
-
-    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.mineinabyss.com/releases")
     maven("https://repo.oraxen.com/releases")
     maven("https://repo.oraxen.com/snapshots")
@@ -28,28 +26,26 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    compileOnly("io.th0rgal:oraxen:1.170.0-SNAPSHOT")
-    compileOnly("io.lumine:MythicCrucible:2.0.0-SNAPSHOT")
-    compileOnly("io.lumine:Mythic-Dist:5.6.0")
-    compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.4")
+    compileOnly(idofrontLibs.minecraft.plugin.oraxen)
+    compileOnly(idofrontLibs.minecraft.plugin.modelengine)
+    compileOnly(idofrontLibs.minecraft.plugin.mythic.crucible)
+    compileOnly(idofrontLibs.minecraft.plugin.mythic.dist)
 
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(libs.idofront.commands)
-    implementation(libs.idofront.config)
-    implementation(libs.idofront.di)
-    implementation(libs.idofront.util)
-    implementation(libs.idofront.text.components)
-    implementation(libs.idofront.logging)
-    implementation(libs.kotlinx.serialization.kaml)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.coroutines)
-    implementation(libs.creative.api)
-    implementation(libs.creative.serializer.minecraft)
+    implementation(idofrontLibs.idofront.commands)
+    implementation(idofrontLibs.idofront.config)
+    implementation(idofrontLibs.idofront.di)
+    implementation(idofrontLibs.idofront.util)
+    implementation(idofrontLibs.idofront.text.components)
+    implementation(idofrontLibs.idofront.logging)
+    implementation(idofrontLibs.kotlinx.serialization.kaml)
+    implementation(idofrontLibs.kotlinx.serialization.json)
+    //implementation(idofrontLibs.kotlinx.coroutines)
+    implementation(idofrontLibs.creative.api)
+    implementation(idofrontLibs.creative.serializer.minecraft)
 }
 
 copyJar {
-    excludePlatformDependencies.set(false)
+    excludePlatformDependencies.set(true)
 }
 
 configurations.all {

@@ -4,7 +4,6 @@ import com.mineinabyss.pack_obfuscator.obfuscator
 import io.th0rgal.oraxen.api.events.OraxenPackGeneratedEvent
 import io.th0rgal.oraxen.api.events.OraxenPackPreUploadEvent
 import io.th0rgal.oraxen.utils.logs.Logs
-import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -13,14 +12,12 @@ class OraxenListener : Listener {
 
     @EventHandler
     fun OraxenPackPreUploadEvent.onPreUpload() {
-        runBlocking {
-            val oraxenSquash = obfuscator.config.oraxen.packSquash
-            if (oraxenSquash.enabled) {
-                Logs.logInfo("Running OraxenPack through PackSquash...")
-                OraxenPackSquash.extractPackSquashConfig(oraxenSquash)
-                OraxenPackSquash.squashOraxenPack()
-                Logs.logSuccess("Successfully Squashed OraxenPack!")
-            }
+        val oraxenSquash = obfuscator.config.oraxen.packSquash
+        if (oraxenSquash.enabled) {
+            Logs.logInfo("Running OraxenPack through PackSquash...")
+            OraxenPackSquash.extractPackSquashConfig(oraxenSquash)
+            OraxenPackSquash.squashOraxenPack()
+            Logs.logSuccess("Successfully Squashed OraxenPack!")
         }
     }
 
