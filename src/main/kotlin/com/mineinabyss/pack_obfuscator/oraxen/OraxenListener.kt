@@ -1,6 +1,6 @@
-package com.boy0000.pack_obfuscator.oraxen
+package com.mineinabyss.pack_obfuscator.oraxen
 
-import com.boy0000.pack_obfuscator.obfuscator
+import com.mineinabyss.pack_obfuscator.obfuscator
 import io.th0rgal.oraxen.api.events.OraxenPackGeneratedEvent
 import io.th0rgal.oraxen.api.events.OraxenPackPreUploadEvent
 import io.th0rgal.oraxen.utils.logs.Logs

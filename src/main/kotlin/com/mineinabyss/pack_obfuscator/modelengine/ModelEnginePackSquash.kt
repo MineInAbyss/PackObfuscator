@@ -1,7 +1,7 @@
-package com.boy0000.pack_obfuscator.modelengine
+package com.mineinabyss.pack_obfuscator.modelengine
 
-import com.boy0000.pack_obfuscator.PackSquash
-import com.boy0000.pack_obfuscator.obfuscator
+import com.mineinabyss.pack_obfuscator.PackSquash
+import com.mineinabyss.pack_obfuscator.obfuscator
 import java.io.File
 
 object ModelEnginePackSquash : PackSquash {

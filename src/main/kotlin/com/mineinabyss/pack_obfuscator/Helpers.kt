@@ -1,4 +1,4 @@
-package com.boy0000.pack_obfuscator
+package com.mineinabyss.pack_obfuscator
 
 import java.io.File
 import java.io.FileInputStream

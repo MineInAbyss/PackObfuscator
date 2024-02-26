@@ -1,8 +1,8 @@
-package com.boy0000.pack_obfuscator
+package com.mineinabyss.pack_obfuscator
 
-import com.boy0000.pack_obfuscator.crucible.CruciblePackSquash
-import com.boy0000.pack_obfuscator.modelengine.ModelEnginePackSquash
-import com.boy0000.pack_obfuscator.oraxen.OraxenPackSquash
+import com.mineinabyss.pack_obfuscator.crucible.CruciblePackSquash
+import com.mineinabyss.pack_obfuscator.modelengine.ModelEnginePackSquash
+import com.mineinabyss.pack_obfuscator.oraxen.OraxenPackSquash
 import com.mineinabyss.idofront.commands.arguments.genericArg
 import com.mineinabyss.idofront.commands.entrypoint.CommandDSLEntrypoint
 import com.mineinabyss.idofront.commands.execution.IdofrontCommandExecutor

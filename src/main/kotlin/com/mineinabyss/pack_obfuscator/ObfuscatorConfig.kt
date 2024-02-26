@@ -1,4 +1,4 @@
-package com.boy0000.pack_obfuscator
+package com.mineinabyss.pack_obfuscator
 
 import com.charleskorn.kaml.YamlComment
 import com.mineinabyss.idofront.messaging.logError

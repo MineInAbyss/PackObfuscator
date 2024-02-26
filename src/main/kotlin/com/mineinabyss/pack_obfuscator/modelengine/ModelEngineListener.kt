@@ -1,7 +1,7 @@
-package com.boy0000.pack_obfuscator.modelengine
+package com.mineinabyss.pack_obfuscator.modelengine
 
-import com.boy0000.pack_obfuscator.CreativeObfuscator
-import com.boy0000.pack_obfuscator.obfuscator
+import com.mineinabyss.pack_obfuscator.CreativeObfuscator
+import com.mineinabyss.pack_obfuscator.obfuscator
 import com.mineinabyss.idofront.messaging.logInfo
 import com.mineinabyss.idofront.messaging.logSuccess
 import com.ticxo.modelengine.api.events.ModelRegistrationEvent

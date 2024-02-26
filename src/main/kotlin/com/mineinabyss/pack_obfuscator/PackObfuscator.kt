@@ -1,8 +1,8 @@
-package com.boy0000.pack_obfuscator
+package com.mineinabyss.pack_obfuscator
 
-import com.boy0000.pack_obfuscator.crucible.CrucibleListener
-import com.boy0000.pack_obfuscator.modelengine.ModelEngineListener
-import com.boy0000.pack_obfuscator.oraxen.OraxenListener
+import com.mineinabyss.pack_obfuscator.crucible.CrucibleListener
+import com.mineinabyss.pack_obfuscator.modelengine.ModelEngineListener
+import com.mineinabyss.pack_obfuscator.oraxen.OraxenListener
 import com.mineinabyss.idofront.config.config
 import com.mineinabyss.idofront.di.DI
 import com.mineinabyss.idofront.messaging.logSuccess

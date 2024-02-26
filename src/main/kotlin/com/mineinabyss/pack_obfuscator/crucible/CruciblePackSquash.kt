@@ -1,8 +1,8 @@
-package com.boy0000.pack_obfuscator.crucible
+package com.mineinabyss.pack_obfuscator.crucible
 
-import com.boy0000.pack_obfuscator.PackSquash
-import com.boy0000.pack_obfuscator.obfuscator
-import com.boy0000.pack_obfuscator.unzip
+import com.mineinabyss.pack_obfuscator.PackSquash
+import com.mineinabyss.pack_obfuscator.obfuscator
+import com.mineinabyss.pack_obfuscator.unzip
 import io.lumine.mythiccrucible.MythicCrucible
 
 object CruciblePackSquash : PackSquash {

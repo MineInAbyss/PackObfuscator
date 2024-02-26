@@ -1,7 +1,7 @@
-package com.boy0000.pack_obfuscator.crucible
+package com.mineinabyss.pack_obfuscator.crucible
 
-import com.boy0000.pack_obfuscator.CreativeObfuscator
-import com.boy0000.pack_obfuscator.obfuscator
+import com.mineinabyss.pack_obfuscator.CreativeObfuscator
+import com.mineinabyss.pack_obfuscator.obfuscator
 import io.lumine.mythiccrucible.MythicCrucible
 import io.lumine.mythiccrucible.events.MythicCrucibleGeneratePackEvent
 import org.bukkit.event.EventHandler

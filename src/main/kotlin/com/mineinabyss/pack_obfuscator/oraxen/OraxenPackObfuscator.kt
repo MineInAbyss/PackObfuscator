@@ -1,6 +1,6 @@
-package com.boy0000.pack_obfuscator.oraxen
+package com.mineinabyss.pack_obfuscator.oraxen
 
-import com.boy0000.pack_obfuscator.substringBetween
+import com.mineinabyss.pack_obfuscator.substringBetween
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

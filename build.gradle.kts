@@ -8,6 +8,8 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Generates plugin.yml
     alias(libs.plugins.shadowjar)
     alias(libs.plugins.mia.copyjar)
+    alias(libs.plugins.mia.autoversion)
+    alias(libs.plugins.mia.publication)
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -47,8 +49,6 @@ dependencies {
 }
 
 copyJar {
-    destPath.set(kotlin.runCatching { project.property("oraxen_plugin_path") }.getOrNull() as? String ?: "build/libs")
-    jarName.set("PackObfuscator-$version.jar")
     excludePlatformDependencies.set(false)
 }
 
@@ -80,11 +80,8 @@ tasks {
 
     shadowJar {
         archiveFileName.set("PackObfuscator.jar")
-        relocate("kotlin", "com.boy0000.shaded.kotlin")
-        relocate("kotlinx", "com.boy0000.shaded.kotlinx")
-        val pluginLoc = project.property("oraxen_plugin_path") as String + "\\PackObfuscator.jar"
-        //archiveFile.get().asFile.copyTo(layout.projectDirectory.file("run/plugins/ModernLightApi.jar").asFile, true)
-        println("Copied to $pluginLoc")
+        relocate("kotlin", "com.mineinabyss.shaded.kotlin")
+        relocate("kotlinx", "com.mineinabyss.shaded.kotlinx")
     }
 
     build {
@@ -99,9 +96,9 @@ java {
 
 //paper {
 //    load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
-//    main = "com.boy0000.pack_obfuscator.PackObfuscator"
+//    main = "com.mineinabyss.pack_obfuscator.PackObfuscator"
 //    version = "${project.version}"
-//    apiVersion = "1.20"
+//    apiVersion = "1.18"
 //    authors = listOf("boy0000")
 //    foliaSupported = true
 //
@@ -110,15 +107,23 @@ java {
 //            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
 //            required = false
 //        }
+//        register("MythicCrucible") {
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//            required = false
+//        }
+//        register("ModelEngine") {
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//            required = false
+//        }
 //    }
 //}
 
 bukkit {
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
-    main = "com.boy0000.pack_obfuscator.PackObfuscator"
+    main = "com.mineinabyss.pack_obfuscator.PackObfuscator"
     version = "${project.version}"
     apiVersion = "1.18"
     authors = listOf("boy0000")
     foliaSupported = true
-    softDepend = listOf("Oraxen", "MythicCrucible")
+    softDepend = listOf("Oraxen", "MythicCrucible", "ModelEngine")
 }

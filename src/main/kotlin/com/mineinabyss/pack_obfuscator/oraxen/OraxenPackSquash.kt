@@ -1,8 +1,8 @@
-package com.boy0000.pack_obfuscator.oraxen
+package com.mineinabyss.pack_obfuscator.oraxen
 
-import com.boy0000.pack_obfuscator.PackSquash
-import com.boy0000.pack_obfuscator.obfuscator
-import com.boy0000.pack_obfuscator.unzip
+import com.mineinabyss.pack_obfuscator.PackSquash
+import com.mineinabyss.pack_obfuscator.obfuscator
+import com.mineinabyss.pack_obfuscator.unzip
 import io.th0rgal.oraxen.api.OraxenPack
 import io.th0rgal.oraxen.utils.logs.Logs
 import java.io.File
