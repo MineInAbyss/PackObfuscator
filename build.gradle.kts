@@ -75,7 +75,7 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.20.1")
+        minecraftVersion("1.18.2")
     }
 
     shadowJar {
@@ -117,7 +117,7 @@ bukkit {
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
     main = "com.boy0000.pack_obfuscator.PackObfuscator"
     version = "${project.version}"
-    apiVersion = "1.20"
+    apiVersion = "1.18"
     authors = listOf("boy0000")
     foliaSupported = true
     softDepend = listOf("Oraxen", "MythicCrucible")

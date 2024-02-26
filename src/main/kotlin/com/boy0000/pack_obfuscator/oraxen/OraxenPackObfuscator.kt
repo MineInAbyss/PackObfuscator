@@ -128,7 +128,7 @@ object OraxenPackObfuscator {
     private fun obfuscateFonts(output: List<VirtualFile>) {
         val flattenedObfTextures = obfuscatedMap.values.flatten()
         output.filter { it.isFont() }.forEach { virtualFont ->
-            val virtualJson = virtualFont.toJsonElement().asJsonObject ?: return
+            val virtualJson = virtualFont.toJsonElement()?.takeIf { it.isJsonObject }?.asJsonObject ?: return
             val providers = virtualJson.getAsJsonArray("providers") ?: return
             providers.map { it.asJsonObject }.forEach providers@{
                 val texture = it.get("file").asString.replace("minecraft:", "").replace(".png", "")
