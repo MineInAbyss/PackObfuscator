@@ -12,14 +12,16 @@ private typealias TexturePath = String
 private typealias ModelPath = String
 
 object OraxenPackObfuscator {
-    fun obfuscate(output: MutableList<VirtualFile>) {
+    fun obfuscate(output: MutableList<VirtualFile>): Boolean {
         obfuscatedMap.clear()
         obfuscatedFont.clear()
-        obfuscateModels(output)
-        obfuscateParentModels(output)
-        obfuscateBlockStateFiles(output)
-        obfuscateFonts(output)
-        obfuscateAtlas(output)
+        return kotlin.runCatching {
+            obfuscateModels(output)
+            obfuscateParentModels(output)
+            obfuscateBlockStateFiles(output)
+            obfuscateFonts(output)
+            obfuscateAtlas(output)
+        }.isSuccess
     }
 
     private data class ObfuscatedModel(val packPath: String, val obfPackPath: String)

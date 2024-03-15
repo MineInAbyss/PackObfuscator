@@ -45,7 +45,8 @@ dependencies {
 }
 
 copyJar {
-    excludePlatformDependencies.set(true)
+    destPath.set(property("oraxen_plugin_path") as String)
+    excludePlatformDependencies.set(false)
 }
 
 configurations.all {
@@ -115,7 +116,7 @@ java {
 //}
 
 bukkit {
-    load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.STARTUP
+    load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     main = "com.mineinabyss.pack_obfuscator.PackObfuscator"
     version = "${project.version}"
     apiVersion = "1.18"

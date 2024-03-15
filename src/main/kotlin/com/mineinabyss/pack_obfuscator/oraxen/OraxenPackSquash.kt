@@ -14,10 +14,12 @@ object OraxenPackSquash: PackSquash {
     override val outputZip: File = OraxenPack.getPack()
 
     fun squashOraxenPack() {
+        Logs.logInfo("Running OraxenPack through PackSquash...")
         unzip(OraxenPack.getPack(), inputDir)
 
         val oraxenSquash = obfuscator.config.oraxen.packSquash
-        super.squashPack(oraxenSquash)
+        if (super.squashPack(oraxenSquash))
+            Logs.logSuccess("Successfully Squashed OraxenPack!")
 
         inputDir.deleteRecursively()
     }

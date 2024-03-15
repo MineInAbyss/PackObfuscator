@@ -38,10 +38,16 @@ interface PackSquash {
         toml.writeText(tomlContent)
     }
 
-    fun squashPack(packsquash: ObfuscatorConfig.PackSquash) {
-        if (!packsquash.validateExecutable()) return logSquashError("PackSquash executable not found, skipping process...")
+    fun squashPack(packsquash: ObfuscatorConfig.PackSquash): Boolean {
+        if (!packsquash.validateExecutable()) {
+            logSquashError("""
+                |PackSquash executable not found, skipping process...
+                |Please set the correct path in the config, or download it from https://github.com/ComunidadAylas/PackSquash-action/releases
+            """.trimMargin())
+            return false
+        }
 
-        runCatching {
+        return runCatching {
             val processBuilder = ProcessBuilder(packsquash.executablePath, packsquash.settingsPath)
             processBuilder.directory(obfuscator.plugin.dataFolder)
             processBuilder.redirectInput(Redirect.PIPE)
@@ -64,7 +70,7 @@ interface PackSquash {
             process.waitFor()
         }.onFailure {
             it.printStackTrace()
-        }
+        }.isSuccess
     }
 
     fun logSquashError(line: String) {

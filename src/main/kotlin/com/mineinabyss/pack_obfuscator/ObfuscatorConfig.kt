@@ -2,6 +2,7 @@ package com.mineinabyss.pack_obfuscator
 
 import com.charleskorn.kaml.YamlComment
 import com.mineinabyss.idofront.messaging.logError
+import com.mineinabyss.pack_obfuscator.GenericPackSquash.logSquashError
 import kotlinx.serialization.Serializable
 import java.io.File
 
@@ -34,13 +35,7 @@ data class ObfuscatorConfig(
         @YamlComment("If true, all squash-info will be output, not just errors and warnings")
         val debug: Boolean = false,
     ) {
-        fun validateExecutable(): Boolean {
-            if (!File(executablePath).exists()) {
-                logError("PackSquash executable not found at $executablePath")
-                logError("Please set the correct path in the config, or download it from https://github.com/ComunidadAylas/PackSquash-action/releases")
-                return false
-            }
-            return true
-        }
+        fun validateExecutable() =
+            !File(executablePath).exists() && !obfuscator.plugin.dataFolder.resolve(executablePath).exists()
     }
 }

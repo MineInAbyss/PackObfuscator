@@ -14,10 +14,10 @@ class OraxenListener : Listener {
     fun OraxenPackPreUploadEvent.onPreUpload() {
         val oraxenSquash = obfuscator.config.oraxen.packSquash
         if (oraxenSquash.enabled) {
-            Logs.logInfo("Running OraxenPack through PackSquash...")
+
             OraxenPackSquash.extractPackSquashConfig(oraxenSquash)
             OraxenPackSquash.squashOraxenPack()
-            Logs.logSuccess("Successfully Squashed OraxenPack!")
+
         }
     }
 
@@ -25,8 +25,8 @@ class OraxenListener : Listener {
     fun OraxenPackGeneratedEvent.onPackGenerated() {
         if (!obfuscator.config.oraxen.obfuscate) return
         Logs.logInfo("Attempting to Obfuscate OraxenPack...")
-        OraxenPackObfuscator.obfuscate(output)
-        Logs.logSuccess("Successfully Obfuscated OraxenPack!")
+        if (OraxenPackObfuscator.obfuscate(output))
+            Logs.logSuccess("Successfully Obfuscated OraxenPack!")
     }
 }
 
