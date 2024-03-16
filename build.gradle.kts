@@ -14,7 +14,8 @@ plugins {
 }
 
 group = "com.boy0000"
-version = "0.1"
+val pluginVersion: String by project
+version = pluginVersion
 
 repositories {
     mavenCentral()
