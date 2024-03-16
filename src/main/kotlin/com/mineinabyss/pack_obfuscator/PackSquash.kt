@@ -28,7 +28,7 @@ interface PackSquash {
         val outputPack = outputZip.absolutePath.correctWindowsPath()
         val toml = File(packsquash.settingsPath).takeIf { it.exists() } ?: obfuscator.plugin.dataFolder.resolve(packsquash.settingsPath)
         if (!toml.exists()) {
-            logInfo("Extracting PackSquash settings...")
+            obfuscator.logger.i("Extracting PackSquash settings...")
             obfuscator.plugin.saveResource("packsquash.toml", false)
         }
 
@@ -40,7 +40,7 @@ interface PackSquash {
 
     fun squashPack(packsquash: ObfuscatorConfig.PackSquash): Boolean {
         if (!packsquash.validateExecutable()) {
-            logSquashError("""
+            obfuscator.logger.e("""
                 |PackSquash executable not found, skipping process...
                 |Please set the correct path in the config, or download it from https://github.com/ComunidadAylas/PackSquash-action/releases
             """.trimMargin())
@@ -78,10 +78,10 @@ interface PackSquash {
     }
 
     fun logSquashWarning(line: String) {
-        logWarn("Warning while squashing pack: $line")
+        obfuscator.logger.w("Warning while squashing pack: $line")
     }
 
     fun logSquashInfo(line: String) {
-        if (obfuscator.config.generic.packSquash.debug) logInfo("Info while squashing pack: $line")
+        if (obfuscator.config.generic.packSquash.debug) obfuscator.logger.i("Info while squashing pack: $line")
     }
 }

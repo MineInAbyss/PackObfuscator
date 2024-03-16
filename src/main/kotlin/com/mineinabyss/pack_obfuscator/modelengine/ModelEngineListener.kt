@@ -18,17 +18,17 @@ class ModelEngineListener : Listener {
     fun ModelRegistrationEvent.onModelEnginePack() {
         if (phase != ModelGenerator.Phase.FINISHED) return
         if (obfuscator.config.modelEngine.obfuscate) {
-            logInfo("Attempting to Obfuscate ModelEnginePack...")
+            obfuscator.logger.i("Attempting to Obfuscate ModelEnginePack...")
             CreativeObfuscator.obfuscate(megZipped, megZipped.toPath())
-            logSuccess("Successfully Obfuscated ModelEnginePack!")
+            obfuscator.logger.iSuccess("Successfully Obfuscated ModelEnginePack!")
         }
 
         val megSquash = obfuscator.config.modelEngine.packSquash
         if (megSquash.enabled) {
-            logInfo("Running ModelEnginePack through PackSquash...")
+            obfuscator.logger.i("Running ModelEnginePack through PackSquash...")
             ModelEnginePackSquash.extractPackSquashConfig(megSquash)
             ModelEnginePackSquash.squashPack(megSquash)
-            logSuccess("Successfully Squashed ModelEnginePack!")
+            obfuscator.logger.iSuccess("Successfully Squashed ModelEnginePack!")
         }
     }
 }

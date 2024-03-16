@@ -20,6 +20,7 @@ version = pluginVersion
 repositories {
     mavenCentral()
     maven("https://repo.mineinabyss.com/releases")
+    maven("https://repo.mineinabyss.com/snapshots")
     maven("https://repo.oraxen.com/releases")
     maven("https://repo.oraxen.com/snapshots")
     maven("https://repo.unnamed.team/repository/unnamed-public/")
