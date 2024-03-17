@@ -13,12 +13,9 @@ class OraxenListener : Listener {
     @EventHandler
     fun OraxenPackPreUploadEvent.onPreUpload() {
         val oraxenSquash = obfuscator.config.oraxen.packSquash
-        if (oraxenSquash.enabled) {
-
-            OraxenPackSquash.extractPackSquashConfig(oraxenSquash)
-            OraxenPackSquash.squashOraxenPack()
-
-        }
+        if (!oraxenSquash.enabled) return
+        OraxenPackSquash.extractPackSquashConfig(oraxenSquash)
+        OraxenPackSquash.squashOraxenPack()
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

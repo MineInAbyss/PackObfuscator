@@ -20,7 +20,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("idofrontLibs") {
             from("com.mineinabyss:catalog:$idofrontVersion")
-            version("oraxen", "1.170.0-SNAPSHOT")
+            version("oraxen", "1.171.0")
         }
     }
 }
